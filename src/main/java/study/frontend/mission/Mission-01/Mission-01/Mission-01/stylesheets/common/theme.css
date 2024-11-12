@@ -1,0 +1,10 @@
+/* Theme Style */
+:root {
+  --color-blue-600: #0074e9;
+  --color-blue-700: #0053a6;
+  --color-gray-100: #ffffff;
+  --color-gray-600: #333;
+  --color-gray-700: #555555;
+  --color-gray-800: #666;
+  --color-white: #ffffff;
+}

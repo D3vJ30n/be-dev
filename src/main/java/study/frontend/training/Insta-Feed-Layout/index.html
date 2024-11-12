@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="./style.css" />
+    <style>
+      p {
+        margin: 0px; /* 모든 p 요소의 기본 마진을 제거합니다 */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <!-- Instagram 스타일의 게시물을 감싸는 div -->
+      <div class="instagram">
+        <!-- 헤더 섹션: 사용자 정보와 메뉴 위치 -->
+        <div class="header">
+          <div class="header-left">
+            <!-- 사용자 프로필 이미지 -->
+            <img
+              class="header-img"
+              src="https://media.istockphoto.com/id/1309988966/ko/%EC%82%AC%EC%A7%84/%ED%8C%8C%EC%9A%B0%EB%8D%94-%EC%8A%A4%ED%82%A4.jpg?s=612x612&w=0&k=20&c=_UF-NIneUy-sb3naB50f7H6PioC1FmL0Y-qTwH1ACpA="
+              width="38px"
+              height="38px"
+              alt="Profile Image"
+            />
+            <!-- 사용자 이름 -->
+            <p>d3vj30n</p>
+          </div>
+          <div class="header-right">
+            <!-- 메뉴 아이콘 -->
+            <p class="right-menu">···</p>
+          </div>
+        </div>
+        <!-- 게시물 이미지 섹션 -->
+        <div class="img">
+          <img
+            src="https://media.istockphoto.com/id/1309988966/ko/%EC%82%AC%EC%A7%84/%ED%8C%8C%EC%9A%B0%EB%8D%94-%EC%8A%A4%ED%82%A4.jpg?s=612x612&w=0&k=20&c=_UF-NIneUy-sb3naB50f7H6PioC1FmL0Y-qTwH1ACpA="
+            alt="Main Post Image"
+          />
+        </div>
+        <!-- 푸터 섹션 -->
+        <div class="footer">
+          <div class="top-left">
+            <svg
+              id="heart"
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-heart"
+              viewBox="0 0 16 16"
+              style="display: inline"
+            >
+              <path
+                d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"
+              />
+            </svg>
+
+            <svg
+              id="fill-heart"
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-suit-heart-fill"
+              viewBox="0 0 16 16"
+              style="display: none"
+            >
+              >
+              <path
+                d="M4 1c2.21 0 4 1.755 4 3.92C8 2.755 9.79 1 12 1s4 1.755 4 3.92c0 3.263-3.234 4.414-7.608 9.608a.513.513 0 0 1-.784 0C3.234 9.334 0 8.183 0 4.92 0 2.755 1.79 1 4 1"
+              />
+            </svg>
+            <span>heart</span>
+            <span>comment</span>
+            <span>DM</span>
+          </div>
+          <div class="top-center">
+            <ul>
+              <li style="background-color: blue"></li>
+              <li></li>
+              <li></li>
+              <li></li>
+            </ul>
+          </div>
+          <div class="top-right">
+            <span>shared</span>
+          </div>
+          <div class="like">
+            <b>100 Likes</b>
+          </div>
+          <div class="comment">
+            <p>
+              <b>Lorem</b> ipsum dolor sit amet consectetur, adipisicing elit.
+              Vel suscipit debitis dolorem eaque voluptatibus. Recusandae
+              repudiandae earum iusto corrupti reiciendis optio aliquam alias
+              eos. Amet placeat perspiciatis sapiente repellendus laboriosam.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const heartContainer = document.querySelector(".top-left");
+        const emptyHeart = heartContainer.querySelector("#heart");
+        const filledHeart = heartContainer.querySelector("#fill-heart");
+
+        emptyHeart.addEventListener("click", function (event) {
+          event.stopPropagation(); // 이벤트 버블링 방지
+          emptyHeart.style.display = "none";
+          filledHeart.style.display = "inline";
+        });
+
+        filledHeart.addEventListener("click", function (event) {
+          event.stopPropagation(); // 이벤트 버블링 방지
+          filledHeart.style.display = "none";
+          emptyHeart.style.display = "inline";
+        });
+      });
+    </script>
+  </body>
+</html>

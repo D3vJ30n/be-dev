@@ -1,0 +1,167 @@
+body {
+  background-color: #c6c6c6; /* 페이지 배경색을 회색으로 설정 */
+  margin: 0; /* 기본 마진 제거 */
+}
+
+.wrap {
+  background-color: white; /* 랩 div의 배경색을 흰색으로 설정 */
+  width: 420px; /* 랩 div의 너비를 420px로 설정 */
+  height: 100vh; /* 랩 div의 높이를 화면 전체 높이로 설정 */
+  margin: 0 auto; /* 중앙 정렬을 위해 수평 마진을 자동으로 설정 */
+  display: flex;
+  align-items: center; /* 랩 div 내의 요소들을 수직 중앙에 정렬 */
+}
+
+.instagram {
+  width: 100%; /* 인스타그램 div의 너비를 100%로 설정 */
+  display: grid;
+  grid-template-rows: auto 504px 125px; /* 그리드 행의 크기를 설정 (헤더는 자동, 이미지 영역은 504px, 푸터는 125px) */
+  grid-template-areas:
+    "header"
+    "img"
+    "footer"; /* 각 행에 대한 그리드 영역 설정 */
+  border: 1px solid black; /* 인스타그램 div의 테두리를 검은색으로 설정 */
+  border-top: 1px solid lightgray; /* 상단 테두리를 연한 회색으로 설정 */
+  border-bottom: 1px solid lightgray; /* 하단 테두리를 연한 회색으로 설정 */
+}
+
+.header {
+  grid-area: header; /* 그리드 영역을 헤더로 설정 */
+  display: flex;
+  justify-content: space-between; /* 자식 요소들을 좌우로 정렬 */
+  align-items: center; /* 자식 요소들을 수직 중앙에 정렬 */
+  padding: 5px 10px; /* 상하 5px, 좌우 10px의 패딩 추가 */
+}
+
+.header-left {
+  display: flex;
+  align-items: center; /* 자식 요소들을 수직 중앙에 정렬 */
+}
+
+.header-img {
+  border: 1px solid black; /* 프로필 이미지의 테두리를 검은색으로 설정 */
+  border-radius: 50%; /* 프로필 이미지를 원형으로 설정 */
+  margin-right: 10px; /* 오른쪽에 10px의 마진 추가 */
+}
+
+.header-right {
+  display: flex;
+  align-items: center; /* 자식 요소들을 수직 중앙에 정렬 */
+}
+
+.right-menu {
+  cursor: pointer; /* 포인터를 추가하여 마우스를 올렸을 때 포인터 아이콘이 나타나도록 설정 */
+}
+
+.img {
+  grid-area: img; /* 그리드 영역을 이미지로 설정 */
+  width: 420px; /* 너비를 420px로 설정 */
+  display: flex;
+  margin: 0;
+}
+
+.img img {
+  width: 100%; /* 이미지의 너비를 100%로 설정 */
+  height: 504px; /* 이미지의 높이를 504px로 고정 */
+  object-fit: cover; /* 이미지를 영역에 맞게 잘라냄 */
+}
+
+.footer {
+  grid-area: footer; /* 그리드 영역을 푸터로 설정 */
+  width: 420px; /* 너비를 420px로 설정 */
+  height: 125px; /* 높이를 125px로 설정 */
+
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto 20px 1fr;
+  grid-template-areas:
+    "top-left top-center top-right"
+    "like like like"
+    "comment comment comment";
+}
+
+.top-left {
+  grid-area: top-left;
+  display: flex;
+  font-size: 10px;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: space-around;
+  cursor: pointer;
+}
+
+.top-left span:nth-of-type(1):hover {
+  color: red;
+}
+
+.top-left span:nth-of-type(1) {
+  position: relative;
+  display: inline-block;
+}
+
+.top-center {
+  grid-area: top-center;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.top-right {
+  grid-area: top-right;
+  display: flex;
+  font-size: 10px;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.like {
+  grid-area: like;
+  font-size: 12px;
+  margin: 0 10px;
+}
+
+.comment {
+  grid-area: comment;
+  font-size: 10px;
+  margin: 0 10px;
+  padding-top: 5px; /* comment 섹션의 상단 여백을 추가하여 100 Likes 밑에 위치 */
+  padding-bottom: 0; /* comment 섹션의 하단 여백을 제거 */
+}
+
+.comment p {
+  margin: 0; /* p 요소의 기본 마진 제거 */
+}
+
+.top-center ul li {
+  width: 5px;
+  height: 5px;
+  border: 1px solid rgb(216, 212, 212);
+  background-color: rgb(216, 212, 212);
+  border-radius: 50%;
+  margin-top: 5px; /* 점들을 아래로 5px 내림 */
+}
+
+ul {
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+  width: 50%;
+}
+
+li {
+  width: 7px;
+  height: 7px;
+  background-color: blue;
+  border-radius: 50%;
+}
+
+#fill-heart {
+  display: none;
+  fill: red;
+}

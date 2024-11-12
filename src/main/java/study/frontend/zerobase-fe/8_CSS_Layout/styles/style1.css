@@ -1,0 +1,25 @@
+span {
+  display: block;
+  border: 1px solid black;
+}
+
+div {
+  display: inline-block;
+
+  border: 5px solid blue;
+  margin: 40px;
+}
+
+#dog {
+  width: 100px;
+  height: 100px;
+  float: right;
+}
+
+#hidden1 {
+  display: none;
+}
+
+#hidden2 {
+  visibility: hidden;
+}

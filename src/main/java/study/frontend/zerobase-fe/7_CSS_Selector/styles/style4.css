@@ -1,0 +1,29 @@
+a:link {
+  color: black;
+}
+
+a:visited {
+  color: aquamarine;
+}
+
+a:hover {
+  color: pink;
+}
+
+a:active {
+  background-color: burlywood;
+}
+
+input:focus {
+  background-color: lightblue;
+}
+
+.warn:hover {
+  color: red;
+  font-size: larger;
+}
+
+#submit:hover {
+  background-color: blue;
+  color: #ffffff;
+}

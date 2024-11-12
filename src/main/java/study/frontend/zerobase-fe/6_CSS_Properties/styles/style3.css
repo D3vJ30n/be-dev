@@ -1,0 +1,21 @@
+h1 {
+    font-family: Arail;
+    text-align: center;
+}
+
+p {
+    font-family: "Times New Roman";
+    /* font-family: 'Nunito', sans-serif; */
+    /* font-family: 'Share Tech Mono', monospace; */
+    font-size: 15px;
+    text-align: justify;
+    /* text-align-last: right; */
+    /* font-style: italic; */
+    /* font-weight: bold; */
+}
+
+#big {
+    font-size: 2.0em;
+}
+
+

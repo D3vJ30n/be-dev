@@ -1,0 +1,150 @@
+/* 오늘의 발견 */
+.container {
+  width: 61.75rem;
+  margin: 1.25rem auto;
+  background-color: #fff;
+  padding: 1.25rem;
+  border: 0.0625rem solid #e0e0e0;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  border-bottom: 0.125rem solid #eee;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.title p {
+  color: #888;
+  margin: 0 0 0 0.625rem;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.product-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  overflow: hidden;
+  width: 59.25rem; /* 전체 너비 조정 */
+  margin: 0 auto; /* 중앙 정렬 */
+  position: relative;
+}
+
+.product-card {
+  background-color: #ffffff;
+  border: 0.125rem solid #eee;
+  overflow: hidden;
+  height: 18.6875rem;
+}
+
+.small-cards-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.75rem; /* 추가 */
+}
+
+.product-card.small {
+  width: 14.25rem;
+  height: 20rem;
+  margin-right: 0.75rem;
+}
+
+.product-card.small:last-child {
+  margin-right: 0;
+}
+
+/* 추가: 큰 카드 내부 콘텐츠 조정 */
+.product-card.large .product-link {
+  padding: 0.5625rem; /* 내부 여백 추가 */
+}
+
+.product-link {
+  display: block;
+  text-decoration: none;
+  color: #333;
+  height: 100%;
+  position: relative;
+}
+
+.product-card:hover,
+.product-card:focus-within {
+  border-color: #4295f4;
+}
+
+.product-link img {
+  width: 100%;
+  height: auto;
+}
+
+.product-link h3 {
+  font-size: 1.125rem;
+  margin: 0.625rem;
+  color: #333;
+  padding: 0 0.625rem;
+}
+
+.product-link p {
+  font-size: 0.875rem;
+  margin: 0 0.625rem 0.625rem;
+}
+
+.product-link::after {
+  content: "";
+  position: absolute;
+  left: 0.625rem;
+  bottom: 0.625rem;
+  width: 2.5rem;
+  height: 2.375rem;
+  background-image: url("arrow.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  opacity: 1;
+}
+
+.product-link::before {
+  content: "구매하기 >";
+  position: absolute;
+  left: 0.625rem;
+  bottom: 0.625rem;
+  width: 6.125rem;
+  height: 2.375rem;
+  background-color: rgb(0, 110, 255);
+  color: white;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+}
+
+.product-link:hover::before,
+.product-link:focus-within::before {
+  opacity: 1; /* hover 상태일 때 구매하기 버튼 보이기 */
+}
+
+.product-link:hover::after,
+.product-link:focus-within::after {
+  opacity: 0; /* hover 상태일 때 화살표 숨기기 */
+}
+
+.discovery h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+}
+
+.discovery h2 p {
+  font-size: 0.875rem;
+  margin-left: 0.5rem;
+  font-weight: normal;
+}

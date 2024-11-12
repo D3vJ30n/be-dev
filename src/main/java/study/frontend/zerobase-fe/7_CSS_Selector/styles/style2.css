@@ -1,0 +1,20 @@
+a {
+  color: blue;
+}
+
+a[target] {
+  background-color: yellow;
+}
+
+a[href="https://www.disney.com"]
+{
+  background-color: coral;
+}
+
+a[href*="naver"] {
+  color: green;
+}
+
+a[href$="co.kr"] {
+  font-weight: bold;
+}

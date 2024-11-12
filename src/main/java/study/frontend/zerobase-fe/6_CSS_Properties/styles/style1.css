@@ -1,0 +1,16 @@
+h1 {
+    color: blue; /* name */
+}
+
+h2 {
+    color : rgb(95, 173, 247); /* rgb */
+}
+
+p {
+    color: rgba(0, 0, 0, 0.3); /* rgba */
+}
+
+li {
+    color: #b49fef; /* hex */
+}
+

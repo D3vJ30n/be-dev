@@ -1,0 +1,17 @@
+/* 자손 */
+div p {
+  background-color: antiquewhite;
+}
+
+div > p {
+  background-color: coral;
+}
+
+/* 형제 */
+div ~ p {
+  background-color: deepskyblue;
+}
+
+div + p {
+  background-color: green;
+}
