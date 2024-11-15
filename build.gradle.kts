@@ -1,7 +1,7 @@
 plugins {
     id("java")
     id("war")
-    id("org.springframework.boot") version "3.3.5"  // 최신 버전으로 업데이트
+    id("org.springframework.boot") version "3.3.5"
     id("io.spring.dependency-management") version "1.1.4"
 }
 
@@ -28,6 +28,19 @@ dependencies {
     implementation("org.apache.tomcat.embed:tomcat-embed-jasper")
     implementation("jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api")
 
+    // SQLite
+    implementation("org.xerial:sqlite-jdbc:3.43.0.0")
+
+    // HTTP Client - Spring Boot에 이미 포함되어 있으므로 okhttp3는 제외
+
+    // JSON 처리 - Spring Boot에 이미 포함되어 있으므로 gson은 제외
+
+    // Lombok
+//    compileOnly("org.projectlombok:lombok:1.18.30")
+//    annotationProcessor("org.projectlombok:lombok:1.18.30")
+//    testCompileOnly("org.projectlombok:lombok:1.18.30")         // 테스트용 추가
+//    testAnnotationProcessor("org.projectlombok:lombok:1.18.30") // 테스트용 추가
+
     // 테스트
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
@@ -36,4 +49,7 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+    doFirst {
+        jvmArgs("-XX:+EnableDynamicAgentLoading", "-Djdk.instrument.traceUsage", "-Xshare:off")
+    }
 }
