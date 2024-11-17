@@ -3,6 +3,8 @@ package study.backend.studying.src.zbmissions;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
@@ -12,10 +14,10 @@ import java.util.Properties;
  */
 public class PracticePropertyHtml {
     public static void main(String[] args) {
-        // try-with-resources를 사용하여 자동으로 리소스(writer) 해제
-        // UTF-8 인코딩을 명시적으로 지정하여 한글 깨짐 방지
+        // Java 8에서는 FileWriter에 직접 charset을 지정할 수 없으므로 OutputStreamWriter 사용
         try (BufferedWriter writer = new BufferedWriter(
-            new FileWriter("property2.html", StandardCharsets.UTF_8))) {
+            new OutputStreamWriter(
+                new FileOutputStream("property2.html"), StandardCharsets.UTF_8))) {
 
             // 1. DOCTYPE 선언 및 HTML 기본 구조 작성
             writer.write("<!DOCTYPE html>\n");  // HTML5 문서 선언

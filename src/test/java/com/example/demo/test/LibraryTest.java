@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.sql.Connection;
 import java.sql.DriverManager;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,10 +15,20 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class LibraryTest {
 
-    // Java 23의 record 타입 사용
-    record TestData(String message) {
+    // Java 8 호환 클래스로 변경
+    private static class TestData {
+        private final String message;
+
         public TestData() {
             this("test");
+        }
+
+        public TestData(String message) {
+            this.message = message;
+        }
+
+        public String getMessage() {
+            return message;
         }
     }
 
@@ -43,7 +54,7 @@ class LibraryTest {
     void sqliteTest() {
         try {
             Class.forName("org.sqlite.JDBC");
-            var conn = DriverManager.getConnection("jdbc:sqlite::memory:");
+            Connection conn = DriverManager.getConnection("jdbc:sqlite::memory:");
             assertNotNull(conn);
             conn.close();
         } catch (Exception e) {
@@ -54,6 +65,6 @@ class LibraryTest {
     @Test
     void lombokTest() {
         TestData data = new TestData();
-        assertEquals("test", data.message());
+        assertEquals("test", data.getMessage());
     }
 }

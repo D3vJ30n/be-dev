@@ -1,15 +1,15 @@
 plugins {
     id("java")
     id("war")
-    id("org.springframework.boot") version "3.3.5"
-    id("io.spring.dependency-management") version "1.1.4"
+    id("org.springframework.boot") version "2.7.18"  // Java 8과 호환되는 마지막 2.x 버전
+    id("io.spring.dependency-management") version "1.0.15.RELEASE"
 }
 
 group = "org.example"
 version = "1.0-SNAPSHOT"
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_23
+    sourceCompatibility = JavaVersion.VERSION_1_8
 }
 
 repositories {
@@ -24,9 +24,9 @@ dependencies {
     // Spring MVC
     implementation("org.springframework:spring-webmvc")
 
-    // JSP 지원
+    // JSP 지원 - Java 8 호환 버전
     implementation("org.apache.tomcat.embed:tomcat-embed-jasper")
-    implementation("jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api")
+    implementation("javax.servlet:jstl")  // Jakarta 대신 javax 사용
 
     // SQLite
     implementation("org.xerial:sqlite-jdbc:3.43.0.0")
@@ -49,7 +49,4 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
-    doFirst {
-        jvmArgs("-XX:+EnableDynamicAgentLoading", "-Djdk.instrument.traceUsage", "-Xshare:off")
-    }
 }

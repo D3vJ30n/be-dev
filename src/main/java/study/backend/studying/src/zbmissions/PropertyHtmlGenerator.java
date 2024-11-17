@@ -21,24 +21,22 @@ import java.io.IOException;
  */
 public class PropertyHtmlGenerator {
     // HTML 문서의 기본 템플릿 (문자열 포맷팅을 위해 %s 사용)
-    private static final String HTML_TEMPLATE = """
-           <!DOCTYPE html>
-           <html>
-           <head>
-               <meta charset="UTF-8"/>
-               <style>
-                   table { border-collapse: collapse; width: 100%%; }
-                   th, td { border: solid 1px #000; }
-               </style>
-           </head>
-           <body>
-               <table>
-                   <tr><th>속성 이름</th><th>값</th></tr>
-                   %s
-               </table>
-           </body>
-           </html>
-           """;
+    private static final String HTML_TEMPLATE = "<!DOCTYPE html>\n" +
+        "<html>\n" +
+        "<head>\n" +
+        "    <meta charset=\"UTF-8\"/>\n" +
+        "    <style>\n" +
+        "        table { border-collapse: collapse; width: 100%%; }\n" +
+        "        th, td { border: solid 1px #000; }\n" +
+        "    </style>\n" +
+        "</head>\n" +
+        "<body>\n" +
+        "    <table>\n" +
+        "        <tr><th>속성 이름</th><th>값</th></tr>\n" +
+        "        %s\n" +
+        "    </table>\n" +
+        "</body>\n" +
+        "</html>";
 
     public static void main(String[] args) {
         // 시스템 속성값 콘솔 출력

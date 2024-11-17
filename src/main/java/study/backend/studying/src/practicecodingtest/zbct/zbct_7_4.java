@@ -1,6 +1,7 @@
 package study.backend.studying.src.practicecodingtest.zbct;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class zbct_7_4 {
     public int solution(int[] arr) {
@@ -17,7 +18,7 @@ public class zbct_7_4 {
         // for countMap의 각 entry
         // if 해당 숫자의 등장 횟수가 1
         // return 해당 숫자와 쌍을 이루는 다른 숫자
-        for (var entry : countMap.entrySet()) {
+        for (Map.Entry<Integer, Integer> entry : countMap.entrySet()) {
             if (entry.getValue() == 1) {
                 answer = entry.getKey();
                 break;

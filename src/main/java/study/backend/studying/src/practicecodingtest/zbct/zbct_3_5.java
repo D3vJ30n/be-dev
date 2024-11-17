@@ -1,13 +1,14 @@
 package study.backend.studying.src.practicecodingtest.zbct;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class zbct_3_5 {
     public String solution(String[] BJ, String[] one, String[] two) {
         // 배열을 List로 변환하여 contains 메서드 사용 가능하게 함
         // 배열보다 List가 검색이 빠름
-        var oneList = Arrays.asList(one); // 한 그릇 먹은 BJ 리스트
-        var twoList = Arrays.asList(two); // 두 그릇 먹은 BJ 리스트
+        List<String> oneList = Arrays.asList(one); // 한 그릇 먹은 BJ 리스트
+        List<String> twoList = Arrays.asList(two); // 두 그릇 먹은 BJ 리스트
 
         // Stream API를 사용해서 우승자 찾기
         String winner = Arrays.stream(BJ) // BJ 배열을 스트림으로 변환
