@@ -1,0 +1,39 @@
+plugins {
+    id 'java'
+    id 'war'
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Servlet & JSP
+    implementation 'javax.servlet:javax.servlet-api:4.0.1'
+    implementation 'javax.servlet.jsp:javax.servlet.jsp-api:2.3.3'
+    implementation 'javax.servlet:jstl:1.2'
+
+    // MySQL
+    implementation 'mysql:mysql-connector-java:8.0.28'
+
+    // Jackson
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
+
+    // OkHttp
+    implementation 'com.squareup.okhttp3:okhttp:4.9.3'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+
+    // 테스트
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+test {
+    useJUnitPlatform()
+}
