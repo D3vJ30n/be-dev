@@ -61,28 +61,49 @@
 ## ERD (Entity Relationship Diagram)
 
 ### 데이터베이스 테이블 설계
-1. **wifi_info**: 공공 와이파이 정보 저장
-    - `id`: 기본 키
-    - `ssid`: 와이파이 이름
-    - `location`: 위치 정보
-    - `latitude`: 위도
-    - `longitude`: 경도
 
-2. **search_history**: 사용자 검색 기록 저장
-    - `id`: 기본 키
-    - `latitude`: 검색한 위도
-    - `longitude`: 검색한 경도
-    - `search_date`: 조회 시간
+**1. wifi_info (공공 와이파이 정보 저장)**  
+- **mgr_no**: 와이파이 관리번호 (기본 키)  
+- **wrdfc**: 자치구  
+- **main_nm**: 와이파이 이름  
+- **adres1**: 도로명 주소  
+- **adres2**: 상세 주소  
+- **instl_floor**: 설치 위치  
+- **instl_ty**: 설치 유형  
+- **instl_mby**: 설치 기관  
+- **svc_se**: 서비스 구분  
+- **cmcwr**: 망 종류  
+- **cnstc_year**: 설치 연도  
+- **inout_door**: 실내외 구분  
+- **remars3**: 비고  
+- **lat**: 위도  
+- **lnt**: 경도  
+- **work_dttm**: 작업일자  
 
-3. **bookmark_group**: 북마크 그룹 정보
-    - `id`: 기본 키
-    - `name`: 그룹 이름
-    - `description`: 그룹 설명
+---
 
-4. **bookmark**: 북마크 데이터
-    - `id`: 기본 키
-    - `wifi_id`: `wifi_info` 테이블의 외래 키
-    - `group_id`: `bookmark_group` 테이블의 외래 키
+**2. location_history (사용자 검색 기록 저장)**  
+- **id**: 순번 (기본 키)  
+- **lat**: 검색한 위도  
+- **lnt**: 검색한 경도  
+- **search_dttm**: 조회 시간  
+
+---
+
+**3. bookmark_group (북마크 그룹 정보)**  
+- **id**: 그룹 ID (기본 키)  
+- **name**: 그룹 이름  
+- **order_no**: 정렬 순서  
+- **reg_dttm**: 등록 일자  
+- **upd_dttm**: 수정 일자  
+
+---
+
+**4. bookmark (북마크 데이터)**  
+- **id**: 북마크 ID (기본 키)  
+- **group_id**: bookmark_group 테이블의 외래 키  
+- **wifi_mgr_no**: wifi_info 테이블의 외래 키  
+- **reg_dttm**: 등록 일자  
 
 ![wifi_ERD설계](https://github.com/user-attachments/assets/acf54a57-da83-44a3-a933-15ce6f5efa7c)
 
