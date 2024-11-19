@@ -10,9 +10,10 @@ import java.util.concurrent.TimeUnit;
 public class HttpClient {
     private static final Logger log = Logger.getLogger(HttpClient.class.getName());
     private static final OkHttpClient client = new OkHttpClient.Builder()
-        .connectTimeout(10, TimeUnit.SECONDS)
-        .readTimeout(30, TimeUnit.SECONDS)
+        .connectTimeout(60, TimeUnit.SECONDS)
+        .readTimeout(60, TimeUnit.SECONDS)
         .build();
+
 
     public static <T> T get(String url, Class<T> responseType) {
         try {

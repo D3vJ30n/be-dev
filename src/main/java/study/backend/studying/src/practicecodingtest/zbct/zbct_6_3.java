@@ -37,7 +37,7 @@ public class zbct_6_3 {
                 char sChar = word_s.charAt(j);  // 비교할 문자열의 현재 문자
 
                 // 7. 패턴 문자가 '가'인 경우
-                if (pChar == '가') {
+                if (pChar == 'A') {
                     // 7-1. '가'가 처음 등장하는 경우, 현재 문자와 매핑
                     // 예: "가나" vs "철나" -> '가'와 '철' 매핑
                     if (!map.containsKey(pChar)) {
@@ -51,6 +51,8 @@ public class zbct_6_3 {
                 }
                 // 8. '가'가 아닌 경우, 문자가 정확히 일치해야 함
                 // 예: "나다" vs "나라" -> false ('다'와 '라'가 다름)
+
+
                 else if (pChar != sChar) {
                     return false;
                 }

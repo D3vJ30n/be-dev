@@ -10,12 +10,11 @@ import java.sql.DriverManager;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * 라이브러리 테스트
+ * LibaryTest
  */
 //@SpringBootTest
 class LibraryTest {
 
-    // Java 8 호환 클래스로 변경
     private static class TestData {
         private final String message;
 
