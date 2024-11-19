@@ -84,6 +84,8 @@
     - `wifi_id`: `wifi_info` 테이블의 외래 키
     - `group_id`: `bookmark_group` 테이블의 외래 키
 
+![wifi_ERD설계](https://github.com/user-attachments/assets/acf54a57-da83-44a3-a933-15ce6f5efa7c)
+
 ---
 
 ## 설치 및 실행 방법
