@@ -4,41 +4,31 @@ plugins {
     id 'application'
 }
 
-group = 'org.example'
-version = '1.0-SNAPSHOT'
-
 repositories {
     mavenCentral()
 }
 
-ext {
-    servletApiVersion = '4.0.1'
-    jspApiVersion = '2.3.3'
-    jstlVersion = '1.2'
-    mysqlVersion = '8.0.28'
-    jacksonVersion = '2.13.0'
-    okhttpVersion = '4.9.3'
-    lombokVersion = '1.18.22'
-    junitVersion = '5.9.3'
-}
-
 dependencies {
-    implementation "javax.servlet:javax.servlet-api:$servletApiVersion"
-    implementation "javax.servlet.jsp:javax.servlet.jsp-api:$jspApiVersion"
-    implementation "javax.servlet:jstl:$jstlVersion"
-    implementation "mysql:mysql-connector-java:$mysqlVersion"
-    implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
-    implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
+    implementation 'org.mariadb.jdbc:mariadb-java-client:3.1.4'  // 버전 업데이트
+    implementation 'javax.servlet:javax.servlet-api:4.0.1'
+    implementation 'javax.servlet.jsp:javax.servlet.jsp-api:2.3.3'
+    implementation 'javax.servlet:jstl:1.2'
+    implementation 'com.squareup.okhttp3:okhttp:4.11.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+    implementation 'org.slf4j:slf4j-api:2.0.9'
+    implementation 'ch.qos.logback:logback-classic:1.4.11'
 
-    compileOnly "org.projectlombok:lombok:$lombokVersion"
-    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
-
-    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
 }
 
 application {
-    mainClass = 'controller.ApiTest'
+    mainClass = 'test.test.DBTest'
+}
+
+tasks.register('execMain', JavaExec) {
+    mainClass = 'test.test.DBTest'
+    classpath = sourceSets.main.runtimeClasspath
 }
 
 java {
@@ -46,10 +36,6 @@ java {
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
-}
-
-tasks.withType(Test) {
-    useJUnitPlatform()
+application {
+    mainClass = 'test.test.DBTest'
 }
