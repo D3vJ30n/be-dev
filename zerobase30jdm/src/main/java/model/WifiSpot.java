@@ -3,12 +3,17 @@ package model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.Setter;
 
+/**
+ * WifiSpot 클래스는 WiFi 정보를 담는 데이터 모델입니다.
+ */
 @Getter
-@JsonIgnoreProperties(ignoreUnknown = true) // 모르는 속성은 무시하도록 설정
+@Setter
+@JsonIgnoreProperties(ignoreUnknown = true) // JSON 데이터에서 알려지지 않은 필드 무시
 public class WifiSpot {
     @JsonProperty("X_SWIFI_MGR_NO")
-    private String managementNo;
+    private String mgrNo;
 
     @JsonProperty("X_SWIFI_WRDOFC")
     private String borough;

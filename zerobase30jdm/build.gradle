@@ -9,7 +9,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.mariadb.jdbc:mariadb-java-client:3.1.4'  // 버전 업데이트
+    implementation 'org.mariadb.jdbc:mariadb-java-client:3.1.4'
     implementation 'javax.servlet:javax.servlet-api:4.0.1'
     implementation 'javax.servlet.jsp:javax.servlet.jsp-api:2.3.3'
     implementation 'javax.servlet:jstl:1.2'
@@ -23,15 +23,28 @@ dependencies {
 }
 
 application {
-    mainClass = 'test.test.DBTest'
+    mainClass.set('_test.test.DBTest')
 }
 
 tasks.register('execMain', JavaExec) {
-    mainClass = 'test.test.DBTest'
+    mainClass.set('_test.test.DBTest')
     classpath = sourceSets.main.runtimeClasspath
 }
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+// 추가: 메인 소스셋 설정
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java']
+        }
+    }
 }
