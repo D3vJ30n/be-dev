@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 @Getter
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonIgnoreProperties(ignoreUnknown = true) // 모르는 속성은 무시하도록 설정
 public class WifiSpot {
     @JsonProperty("X_SWIFI_MGR_NO")
     private String managementNo;
