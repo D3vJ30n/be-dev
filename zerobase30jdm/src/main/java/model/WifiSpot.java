@@ -7,56 +7,58 @@ import lombok.Setter;
 
 /**
  * WifiSpot 클래스는 WiFi 정보를 담는 데이터 모델입니다.
+ * 이 클래스는 JSON 응답에서 와이파이 정보 데이터를 매핑하는 데 사용됩니다.
  */
 @Getter
 @Setter
-@JsonIgnoreProperties(ignoreUnknown = true) // JSON 데이터에서 알려지지 않은 필드 무시
+@JsonIgnoreProperties(ignoreUnknown = true)  // JSON 데이터에서 알려지지 않은 필드를 무시하도록 설정
 public class WifiSpot {
-    @JsonProperty("X_SWIFI_MGR_NO")
-    private String mgrNo;
 
-    @JsonProperty("X_SWIFI_WRDOFC")
-    private String borough;
+    @JsonProperty("X_SWIFI_MGR_NO")  // JSON의 "X_SWIFI_MGR_NO" 속성과 매핑
+    private String mgrNo;  // 와이파이 고유 식별 번호
 
-    @JsonProperty("X_SWIFI_MAIN_NM")
-    private String name;
+    @JsonProperty("X_SWIFI_WRDOFC")  // JSON의 "X_SWIFI_WRDOFC" 속성과 매핑
+    private String borough;  // 자치구 (소속된 지역)
 
-    @JsonProperty("X_SWIFI_ADRES1")
-    private String address1;
+    @JsonProperty("X_SWIFI_MAIN_NM")  // JSON의 "X_SWIFI_MAIN_NM" 속성과 매핑
+    private String name;  // 와이파이 이름
 
-    @JsonProperty("X_SWIFI_ADRES2")
-    private String address2;
+    @JsonProperty("X_SWIFI_ADRES1")  // JSON의 "X_SWIFI_ADRES1" 속성과 매핑
+    private String address1;  // 도로명주소
 
-    @JsonProperty("X_SWIFI_INSTL_FLOOR")
-    private String installFloor;
+    @JsonProperty("X_SWIFI_ADRES2")  // JSON의 "X_SWIFI_ADRES2" 속성과 매핑
+    private String address2;  // 상세주소
 
-    @JsonProperty("X_SWIFI_INSTL_TY")
-    private String installType;
+    @JsonProperty("X_SWIFI_INSTL_FLOOR")  // JSON의 "X_SWIFI_INSTL_FLOOR" 속성과 매핑
+    private String installFloor;  // 설치 층
 
-    @JsonProperty("X_SWIFI_INSTL_MBY")
-    private String installAgency;
+    @JsonProperty("X_SWIFI_INSTL_TY")  // JSON의 "X_SWIFI_INSTL_TY" 속성과 매핑
+    private String installType;  // 설치 유형 (예: 실내, 실외)
 
-    @JsonProperty("X_SWIFI_SVC_SE")
-    private String serviceType;
+    @JsonProperty("X_SWIFI_INSTL_MBY")  // JSON의 "X_SWIFI_INSTL_MBY" 속성과 매핑
+    private String installAgency;  // 설치 기관
 
-    @JsonProperty("X_SWIFI_CMCWR")
-    private String networkType;
+    @JsonProperty("X_SWIFI_SVC_SE")  // JSON의 "X_SWIFI_SVC_SE" 속성과 매핑
+    private String serviceType;  // 서비스 구분 (예: 공공WiFi)
 
-    @JsonProperty("X_SWIFI_CNSTC_YEAR")
-    private String installYear;
+    @JsonProperty("X_SWIFI_CMCWR")  // JSON의 "X_SWIFI_CMCWR" 속성과 매핑
+    private String networkType;  // 네트워크 종류
 
-    @JsonProperty("X_SWIFI_INOUT_DOOR")
-    private String indoorOutdoor;
+    @JsonProperty("X_SWIFI_CNSTC_YEAR")  // JSON의 "X_SWIFI_CNSTC_YEAR" 속성과 매핑
+    private String installYear;  // 설치 연도
 
-    @JsonProperty("X_SWIFI_REMARS3")
-    private String remarks;
+    @JsonProperty("X_SWIFI_INOUT_DOOR")  // JSON의 "X_SWIFI_INOUT_DOOR" 속성과 매핑
+    private String indoorOutdoor;  // 실내/외 구분
 
-    @JsonProperty("LAT")
-    private Double latitude;
+    @JsonProperty("X_SWIFI_REMARS3")  // JSON의 "X_SWIFI_REMARS3" 속성과 매핑
+    private String remarks;  // 비고 (추가적인 설명)
 
-    @JsonProperty("LNT")
-    private Double longitude;
+    @JsonProperty("LAT")  // JSON의 "LAT" 속성과 매핑
+    private Double latitude;  // 위도 (Y 좌표)
 
-    @JsonProperty("WORK_DTTM")
-    private String workDateTime;
+    @JsonProperty("LNT")  // JSON의 "LNT" 속성과 매핑
+    private Double longitude;  // 경도 (X 좌표)
+
+    @JsonProperty("WORK_DTTM")  // JSON의 "WORK_DTTM" 속성과 매핑
+    private String workDateTime;  // 작업 일시 (마지막 업데이트 시간)
 }
