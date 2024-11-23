@@ -105,7 +105,7 @@
 - **wifi_mgr_no**: wifi_info 테이블의 외래 키
 - **reg_dttm**: 등록 일자
 
-![Public WiFi Service](images/Public%20WiFi%20Service%20Location%20Information%20System.png)
+![Public WiFi Service Location Information System](images/Public%20WiFi%20Service%20Location%20Information%20System.png)
 
 
 

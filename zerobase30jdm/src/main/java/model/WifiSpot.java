@@ -27,19 +27,34 @@ public class WifiSpot {
     @JsonProperty("X_SWIFI_ADRES2")
     private String address2;
 
-    @JsonProperty("X_SWIFI_INSTL_TY")
-    private String installType;
-
     @JsonProperty("X_SWIFI_INSTL_FLOOR")
     private String installFloor;
+
+    @JsonProperty("X_SWIFI_INSTL_TY")
+    private String installType;
 
     @JsonProperty("X_SWIFI_INSTL_MBY")
     private String installAgency;
 
-    @JsonProperty("X_SWIFI_LAT")
+    @JsonProperty("X_SWIFI_SVC_SE")
+    private String serviceType;
+
+    @JsonProperty("X_SWIFI_CMCWR")
+    private String networkType;
+
+    @JsonProperty("X_SWIFI_CNSTC_YEAR")
+    private String installYear;
+
+    @JsonProperty("X_SWIFI_INOUT_DOOR")
+    private String indoorOutdoor;
+
+    @JsonProperty("X_SWIFI_REMARS3")
+    private String remarks;
+
+    @JsonProperty("LAT")
     private Double latitude;
 
-    @JsonProperty("X_SWIFI_LNT")
+    @JsonProperty("LNT")
     private Double longitude;
 
     @JsonProperty("WORK_DTTM")

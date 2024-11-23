@@ -12,19 +12,13 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * WifiService는 와이파이 정보를 관리하는 서비스 클래스입니다.
- * API 호출과 데이터베이스 처리를 담당합니다.
- */
 public class WifiService {
-    // DB 연결 정보
     private static final String DB_URL = "jdbc:mariadb://192.168.219.101:3306/testdb1";
     private static final String DB_USER = "root";
     private static final String DB_PASSWORD = "618811";
 
-    // API 관련 정보
     private static final String API_URL = "http://openapi.seoul.go.kr:8088";
-    private static final String API_KEY = "5861565a546a787839304b4e664354"; // 실제 API 키로 교체 필요
+    private static final String API_KEY = "5861565a546a787839304b4e664354";
 
     private final OkHttpClient httpClient;
     private final ObjectMapper objectMapper;
@@ -40,15 +34,10 @@ public class WifiService {
         }
     }
 
-    /**
-     * API에서 와이파이 정보를 가져옵니다.
-     */
     public WifiApiResponse getWifiInfoFromApi(int start, int end) throws IOException {
         String url = String.format("%s/%s/json/TbPublicWifiInfo/%d/%d", API_URL, API_KEY, start, end);
 
-        Request request = new Request.Builder()
-            .url(url)
-            .build();
+        Request request = new Request.Builder().url(url).build();
 
         try (Response response = httpClient.newCall(request).execute()) {
             if (!response.isSuccessful()) {
@@ -60,42 +49,54 @@ public class WifiService {
         }
     }
 
-    /**
-     * 데이터베이스에 와이파이 정보를 저장합니다.
-     */
     public void saveWifiSpots(List<WifiSpot> spots) {
-        String sql = "INSERT INTO wifi_info (mgr_no, X_SWIFI_WRDOFC, X_SWIFI_MAIN_NM, X_SWIFI_ADRES1, " +
-            "X_SWIFI_ADRES2, X_SWIFI_INSTL_TY, X_SWIFI_INSTL_FLOOR, X_SWIFI_INSTL_MBY, " +
-            "X_SWIFI_LAT, X_SWIFI_LNT, WORK_DTTM) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        if (spots == null || spots.isEmpty()) {
+            System.err.println("저장할 데이터가 없습니다.");
+            return;
+        }
+
+        String sql = "INSERT INTO wifi_info (x_swifi_mgr_no, x_swifi_wrdofc, x_swifi_main_nm, " +
+            "x_swifi_adres1, x_swifi_adres2, x_swifi_instl_floor, x_swifi_instl_ty, " +
+            "x_swifi_instl_mby, x_swifi_svc_se, x_swifi_cmcwr, x_swifi_cnstc_year, " +
+            "x_swifi_inout_door, x_swifi_remars3, lat, lnt, work_dttm) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             for (WifiSpot spot : spots) {
+                if (spot == null) {
+                    System.err.println("Null 데이터가 감지되었습니다. 무시합니다.");
+                    continue;
+                }
+
                 pstmt.setString(1, spot.getMgrNo());
                 pstmt.setString(2, spot.getBorough());
                 pstmt.setString(3, spot.getName());
                 pstmt.setString(4, spot.getAddress1());
                 pstmt.setString(5, spot.getAddress2());
-                pstmt.setString(6, spot.getInstallType());
-                pstmt.setString(7, spot.getInstallFloor());
+                pstmt.setString(6, spot.getInstallFloor());
+                pstmt.setString(7, spot.getInstallType());
                 pstmt.setString(8, spot.getInstallAgency());
-                pstmt.setDouble(9, spot.getLatitude());
-                pstmt.setDouble(10, spot.getLongitude());
-                pstmt.setString(11, spot.getWorkDateTime());
+                pstmt.setString(9, spot.getServiceType());
+                pstmt.setString(10, spot.getNetworkType());
+                pstmt.setString(11, spot.getInstallYear());
+                pstmt.setString(12, spot.getIndoorOutdoor());
+                pstmt.setString(13, spot.getRemarks());
+                pstmt.setDouble(14, spot.getLatitude());
+                pstmt.setDouble(15, spot.getLongitude());
+                pstmt.setString(16, spot.getWorkDateTime());
 
                 pstmt.addBatch();
             }
             pstmt.executeBatch();
 
         } catch (SQLException e) {
+            System.err.println("데이터 저장 중 오류 발생: " + e.getMessage());
             throw new RuntimeException("WiFi 데이터 저장 실패", e);
         }
     }
 
-    /**
-     * 모든 와이파이 정보를 조회합니다.
-     */
     public List<WifiSpot> getAllWifiSpots() {
         List<WifiSpot> wifiSpots = new ArrayList<>();
         String sql = "SELECT * FROM wifi_info";
@@ -106,67 +107,60 @@ public class WifiService {
 
             while (rs.next()) {
                 WifiSpot spot = new WifiSpot();
-                spot.setMgrNo(rs.getString("mgr_no"));
-                spot.setBorough(rs.getString("X_SWIFI_WRDOFC"));
-                spot.setName(rs.getString("X_SWIFI_MAIN_NM"));
-                spot.setAddress1(rs.getString("X_SWIFI_ADRES1"));
-                spot.setAddress2(rs.getString("X_SWIFI_ADRES2"));
-                spot.setInstallType(rs.getString("X_SWIFI_INSTL_TY"));
-                spot.setInstallFloor(rs.getString("X_SWIFI_INSTL_FLOOR"));
-                spot.setInstallAgency(rs.getString("X_SWIFI_INSTL_MBY"));
-                spot.setLatitude(rs.getDouble("X_SWIFI_LAT"));
-                spot.setLongitude(rs.getDouble("X_SWIFI_LNT"));
-                spot.setWorkDateTime(rs.getString("WORK_DTTM"));
+                spot.setMgrNo(rs.getString("x_swifi_mgr_no"));
+                spot.setBorough(rs.getString("x_swifi_wrdofc"));
+                spot.setName(rs.getString("x_swifi_main_nm"));
+                spot.setAddress1(rs.getString("x_swifi_adres1"));
+                spot.setAddress2(rs.getString("x_swifi_adres2"));
+                spot.setInstallFloor(rs.getString("x_swifi_instl_floor"));
+                spot.setInstallType(rs.getString("x_swifi_instl_ty"));
+                spot.setInstallAgency(rs.getString("x_swifi_instl_mby"));
+                spot.setServiceType(rs.getString("x_swifi_svc_se"));
+                spot.setNetworkType(rs.getString("x_swifi_cmcwr"));
+                spot.setInstallYear(rs.getString("x_swifi_cnstc_year"));
+                spot.setIndoorOutdoor(rs.getString("x_swifi_inout_door"));
+                spot.setRemarks(rs.getString("x_swifi_remars3"));
+                spot.setLatitude(rs.getDouble("lat"));
+                spot.setLongitude(rs.getDouble("lnt"));
+                spot.setWorkDateTime(rs.getString("work_dttm"));
 
                 wifiSpots.add(spot);
             }
         } catch (SQLException e) {
+            System.err.println("데이터 조회 중 오류 발생: " + e.getMessage());
             throw new RuntimeException("WiFi 데이터 조회 실패", e);
         }
         return wifiSpots;
     }
 
-    /**
-     * 주어진 위치에서 가장 가까운 20개의 와이파이 정보를 조회합니다.
-     */
-    public List<WifiSpot> getNearbyWifiSpots(double lat, double lnt) {
-        List<WifiSpot> wifiSpots = new ArrayList<>();
-        String sql = "SELECT *, " +
-            "(6371 * acos(cos(radians(?)) * cos(radians(X_SWIFI_LAT)) * " +
-            "cos(radians(X_SWIFI_LNT) - radians(?)) + " +
-            "sin(radians(?)) * sin(radians(X_SWIFI_LAT)))) AS distance " +
-            "FROM wifi_info " +
-            "ORDER BY distance " +
-            "LIMIT 20";
+    public int fetchAndSaveWifiData() {
+        int totalSaved = 0;
+        int batchSize = 1000;
+        int start = 1;
 
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try {
+            WifiApiResponse initialResponse = getWifiInfoFromApi(1, 1);
+            int totalCount = initialResponse.getWifiInfo().getTotalCount();
+            System.out.println("전체 데이터 개수: " + totalCount);
 
-            pstmt.setDouble(1, lat);
-            pstmt.setDouble(2, lnt);
-            pstmt.setDouble(3, lat);
+            while (start <= totalCount) {
+                int end = Math.min(start + batchSize - 1, totalCount);
+                System.out.printf("API 호출: %d ~ %d%n", start, end);
 
-            try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    WifiSpot spot = new WifiSpot();
-                    spot.setMgrNo(rs.getString("mgr_no"));
-                    spot.setBorough(rs.getString("X_SWIFI_WRDOFC"));
-                    spot.setName(rs.getString("X_SWIFI_MAIN_NM"));
-                    spot.setAddress1(rs.getString("X_SWIFI_ADRES1"));
-                    spot.setAddress2(rs.getString("X_SWIFI_ADRES2"));
-                    spot.setInstallType(rs.getString("X_SWIFI_INSTL_TY"));
-                    spot.setInstallFloor(rs.getString("X_SWIFI_INSTL_FLOOR"));
-                    spot.setInstallAgency(rs.getString("X_SWIFI_INSTL_MBY"));
-                    spot.setLatitude(rs.getDouble("X_SWIFI_LAT"));
-                    spot.setLongitude(rs.getDouble("X_SWIFI_LNT"));
-                    spot.setWorkDateTime(rs.getString("WORK_DTTM"));
+                WifiApiResponse response = getWifiInfoFromApi(start, end);
+                List<WifiSpot> spots = response.getWifiInfo().getSpots();
 
-                    wifiSpots.add(spot);
-                }
+                saveWifiSpots(spots);
+                totalSaved += spots.size();
+
+                start += batchSize;
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("근처 WiFi 데이터 조회 실패", e);
+        } catch (IOException e) {
+            System.err.println("API 데이터 가져오기 중 오류 발생: " + e.getMessage());
+            throw new RuntimeException("API 데이터 가져오기 중 오류 발생", e);
         }
-        return wifiSpots;
+
+        System.out.printf("총 저장된 데이터 개수: %d%n", totalSaved);
+        return totalSaved;
     }
 }

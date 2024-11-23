@@ -23,11 +23,11 @@ dependencies {
 }
 
 application {
-    mainClass.set('_test.test.DBTest')
+    mainClass.set('_test.test.WifiApiTest')  // DBTest에서 WifiApiTest로 변경
 }
 
 tasks.register('execMain', JavaExec) {
-    mainClass.set('_test.test.DBTest')
+    mainClass.set('_test.test.WifiApiTest')  // 여기도 동일하게 변경
     classpath = sourceSets.main.runtimeClasspath
 }
 
@@ -40,7 +40,6 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
-// 추가: 메인 소스셋 설정
 sourceSets {
     main {
         java {

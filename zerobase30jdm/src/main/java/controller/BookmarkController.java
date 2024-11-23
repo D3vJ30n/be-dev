@@ -4,14 +4,26 @@ import model.Bookmark;
 import service.BookmarkService;
 import java.util.List;
 
+/**
+ * BookmarkController 클래스
+ * 북마크와 관련된 로직을 처리하고 서비스 레이어와 상호작용하는 컨트롤러
+ * 주로 사용자 요청을 처리하고 적절한 서비스 메서드를 호출하여 응답을 반환
+ */
 public class BookmarkController {
     private final BookmarkService bookmarkService;
 
+    /**
+     * 기본 생성자
+     * BookmarkService 인스턴스를 초기화
+     */
     public BookmarkController() {
         this.bookmarkService = new BookmarkService();
     }
 
-    // 북마크 목록 조회
+    /**
+     * 북마크 목록 조회
+     * @return 북마크 목록
+     */
     public List<Bookmark> getBookmarkList() {
         try {
             return bookmarkService.getBookmarkList();
@@ -21,7 +33,12 @@ public class BookmarkController {
         }
     }
 
-    // 북마크 추가
+    /**
+     * 북마크 추가
+     * @param groupId 그룹 ID
+     * @param wifiMgrNo 와이파이 관리번호
+     * @param wifiName 와이파이 이름
+     */
     public void addBookmark(int groupId, String wifiMgrNo, String wifiName) {
         try {
             // 입력값 검증
@@ -42,7 +59,10 @@ public class BookmarkController {
         }
     }
 
-    // 북마크 삭제
+    /**
+     * 북마크 삭제
+     * @param id 북마크 ID
+     */
     public void deleteBookmark(int id) {
         try {
             if (id <= 0) {
@@ -55,7 +75,11 @@ public class BookmarkController {
         }
     }
 
-    // 단일 북마크 조회
+    /**
+     * 단일 북마크 조회
+     * @param id 북마크 ID
+     * @return 조회된 북마크
+     */
     public Bookmark getBookmark(int id) {
         try {
             if (id <= 0) {
@@ -68,7 +92,11 @@ public class BookmarkController {
         }
     }
 
-    // 그룹별 북마크 목록 조회
+    /**
+     * 그룹별 북마크 목록 조회
+     * @param groupId 그룹 ID
+     * @return 그룹에 속한 북마크 목록
+     */
     public List<Bookmark> getBookmarkListByGroupId(int groupId) {
         try {
             if (groupId <= 0) {
@@ -81,7 +109,11 @@ public class BookmarkController {
         }
     }
 
-    // 입력값 검증
+    /**
+     * 입력값 검증 메서드
+     * @param groupId 그룹 ID
+     * @param wifiMgrNo 와이파이 관리번호
+     */
     private void validateInput(int groupId, String wifiMgrNo) {
         if (groupId <= 0) {
             throw new IllegalArgumentException("유효하지 않은 그룹 ID 값입니다.");
@@ -94,7 +126,11 @@ public class BookmarkController {
         }
     }
 
-    // 북마크 존재 여부 확인
+    /**
+     * 북마크 존재 여부 확인
+     * @param id 북마크 ID
+     * @return 존재 여부 (true/false)
+     */
     public boolean existsBookmark(int id) {
         try {
             return getBookmark(id) != null;
@@ -103,7 +139,11 @@ public class BookmarkController {
         }
     }
 
-    // 특정 그룹의 북마크 개수 조회
+    /**
+     * 특정 그룹의 북마크 개수 조회
+     * @param groupId 그룹 ID
+     * @return 해당 그룹의 북마크 개수
+     */
     public int getBookmarkCountByGroupId(int groupId) {
         try {
             return getBookmarkListByGroupId(groupId).size();
@@ -113,7 +153,13 @@ public class BookmarkController {
         }
     }
 
-    // 중복 북마크 체크 (같은 그룹에 같은 와이파이가 이미 북마크되어 있는지)
+    /**
+     * 중복 북마크 체크
+     * 같은 그룹에 동일한 와이파이가 이미 북마크되어 있는지 확인
+     * @param groupId 그룹 ID
+     * @param wifiMgrNo 와이파이 관리번호
+     * @return 중복 여부 (true/false)
+     */
     public boolean isDuplicateBookmark(int groupId, String wifiMgrNo) {
         try {
             List<Bookmark> groupBookmarks = getBookmarkListByGroupId(groupId);
