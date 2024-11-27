@@ -43,7 +43,7 @@ public class HistoryController {
             // 좌표 유효성 검사
             if (validateCoordinates(lat, lnt)) {
                 History history = new History(lat, lnt);
-                historyService.insertHistory(history);
+                historyService.insertHistory(history); // DB에 히스토리 추가
             }
         } catch (IllegalArgumentException e) {
             System.err.println("유효하지 않은 위치 좌표: " + e.getMessage());
@@ -60,10 +60,11 @@ public class HistoryController {
      */
     public void deleteHistory(int id) {
         try {
+            // ID 유효성 검사
             if (id <= 0) {
                 throw new IllegalArgumentException("유효하지 않은 ID 값입니다.");
             }
-            historyService.deleteHistory(id);
+            historyService.deleteHistory(id); // DB에서 히스토리 삭제
         } catch (RuntimeException e) {
             System.err.println("위치 히스토리 삭제 중 오류 발생: " + e.getMessage());
             throw e;
@@ -77,10 +78,11 @@ public class HistoryController {
      */
     public History getHistory(int id) {
         try {
+            // ID 유효성 검사
             if (id <= 0) {
                 throw new IllegalArgumentException("유효하지 않은 ID 값입니다.");
             }
-            return historyService.getHistory(id);
+            return historyService.getHistory(id); // ID로 히스토리 조회
         } catch (RuntimeException e) {
             System.err.println("위치 히스토리 조회 중 오류 발생: " + e.getMessage());
             throw e;
@@ -93,7 +95,7 @@ public class HistoryController {
      */
     public int getHistoryCount() {
         try {
-            return historyService.getHistoryCount();
+            return historyService.getHistoryCount(); // 히스토리 개수 반환
         } catch (RuntimeException e) {
             System.err.println("위치 히스토리 개수 조회 중 오류 발생: " + e.getMessage());
             throw e;

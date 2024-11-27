@@ -4,6 +4,9 @@ plugins {
     id 'application'
 }
 
+group 'org.example'
+version '1.0-SNAPSHOT'
+
 repositories {
     mavenCentral()
 }
@@ -17,18 +20,25 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
     implementation 'org.slf4j:slf4j-api:2.0.9'
     implementation 'ch.qos.logback:logback-classic:1.4.11'
+    implementation 'net.java.dev.jna:jna:5.13.0' // JNA 최신 버전 사용
+    implementation 'com.google.code.gson:gson:2.8.9'
 
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
+
+    providedCompile 'org.apache.tomcat:tomcat-servlet-api:9.0.76'
 }
 
 application {
-    mainClass.set('_test.test.WifiApiTest')  // DBTest에서 WifiApiTest로 변경
+    mainClass.set('_test.test.WifiApiTest')
 }
 
 tasks.register('execMain', JavaExec) {
-    mainClass.set('_test.test.WifiApiTest')  // 여기도 동일하게 변경
+    mainClass.set('_test.test.WifiApiTest')
     classpath = sourceSets.main.runtimeClasspath
+    environment 'DB_URL', 'jdbc:mariadb://localhost:3306/your_database?useSSL=false&allowPublicKeyRetrieval=true'
+    environment 'DB_USER', 'root'
+    environment 'DB_PASSWORD', '618811'
 }
 
 java {
@@ -40,10 +50,24 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
+war {
+    enabled = true
+    webAppDirName = 'src/main/webapp'
+}
+
 sourceSets {
     main {
         java {
             srcDirs = ['src/main/java']
         }
+        resources {
+            srcDirs = ['src/main/resources']
+        }
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
     }
 }

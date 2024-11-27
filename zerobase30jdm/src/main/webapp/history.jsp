@@ -148,6 +148,63 @@
             clip: rect(0, 0, 0, 0);
             border: 0;
         }
+
+        /* 알림 메시지 스타일 추가 */
+        .notification {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            max-width: 300px;
+        }
+
+        .notification.success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+
+        .notification.error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+
+        .input-group {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .input-field {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            flex: 1;
+        }
+
+        .save-button {
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .save-button:hover {
+            background-color: #0056b3;
+        }
+
+        .save-button:focus {
+            outline: 3px solid #1a73e8;
+            outline-offset: 2px;
+        }
     </style>
 </head>
 <body>
@@ -168,6 +225,28 @@
     </header>
 
     <main id="main-content" role="main">
+        <!-- 알림 메시지를 위한 컨테이너 -->
+        <div id="notification" class="notification" role="alert" aria-live="polite"></div>
+
+        <!-- 위치 추가 폼 -->
+        <div class="input-group">
+            <label for="latitude">위도:</label>
+            <input type="text" id="latitude" class="input-field"
+                   placeholder="위도를 입력하세요"
+                   aria-label="위도 입력"
+                   aria-describedby="lat-format">
+            <span id="lat-format" class="sr-only">위도는 -90에서 90 사이의 숫자여야 합니다</span>
+
+            <label for="longitude">경도:</label>
+            <input type="text" id="longitude" class="input-field"
+                   placeholder="경도를 입력하세요"
+                   aria-label="경도 입력"
+                   aria-describedby="lng-format">
+            <span id="lng-format" class="sr-only">경도는 -180에서 180 사이의 숫자여야 합니다</span>
+
+            <button onclick="addHistory()" class="save-button">저장</button>
+        </div>
+
         <div id="statusMessage" role="status" aria-live="polite" class="sr-only"></div>
 
         <table role="table" aria-label="위치 히스토리 목록">
@@ -219,64 +298,127 @@
 </div>
 
 <script>
-    // 키보드 접근성 향상
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Delete' && document.activeElement.classList.contains('delete-button')) {
-            e.preventDefault();
-            const button = document.activeElement;
-            const id = button.getAttribute('aria-label').match(/\d+/)[0];
-            deleteHistory(id);
-        }
-    });
+    // 알림 메시지 표시 함수
+    function showNotification(message, type) {
+        const notification = document.getElementById('notification');
+        const statusMessage = document.getElementById('statusMessage');
 
-    function deleteHistory(id) {
-        if (confirm('이 히스토리를 삭제하시겠습니까?')) {
-            updateStatus('삭제를 시작합니다.');
+        // 시각적 알림
+        notification.textContent = message;
+        notification.className = `notification ${type}`;
+        notification.style.display = 'block';
 
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', 'history-delete.jsp', true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        // 스크린 리더를 위한 상태 메시지
+        statusMessage.textContent = message;
 
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4) {
-                    if (xhr.status === 200) {
-                        updateStatus('삭제가 완료되었습니다.');
-                        location.reload();
-                    } else {
-                        updateStatus('삭제 중 오류가 발생했습니다.');
-                    }
-                }
-            };
-
-            xhr.send('id=' + id);
-        }
-    }
-
-    function updateStatus(message) {
-        const statusElement = document.getElementById('statusMessage');
-        statusElement.textContent = message;
-
-        // 스크린리더 사용자를 위한 새로운 상태 메시지 생성
-        const announcement = document.createElement('div');
-        announcement.setAttribute('role', 'status');
-        announcement.setAttribute('aria-live', 'polite');
-        announcement.className = 'sr-only';
-        announcement.textContent = message;
-        document.body.appendChild(announcement);
-
+        // 3초 후 알림 숨기기
         setTimeout(() => {
-            announcement.remove();
-        }, 1000);
+            notification.style.display = 'none';
+            notification.textContent = '';
+        }, 3000);
     }
 
-    // 페이지 로드 시 전체 개수 알림
-    window.onload = function() {
-        const totalRows = document.querySelectorAll('table tbody tr').length;
-        const message = totalRows === 0 ?
-            '위치 히스토리가 없습니다.' :
-            `총 ${totalRows}개의 위치 히스토리가 있습니다.`;
-        updateStatus(message);
-    };
+    // 입력값 유효성 검사
+    function validateCoordinates(lat, lng) {
+        const latNum = parseFloat(lat);
+        const lngNum = parseFloat(lng);
+
+        if (isNaN(latNum) || isNaN(lngNum)) {
+            return { valid: false, message: "위도와 경도는 숫자여야 합니다." };
+        }
+
+        if (latNum < -90 || latNum > 90) {
+            return { valid: false, message: "위도는 -90에서 90 사이여야 합니다." };
+        }
+
+        if (lngNum < -180 || lngNum > 180) {
+            return { valid: false, message: "경도는 -180에서 180 사이여야 합니다." };
+        }
+
+        return { valid: true };
+    }
+
+    // 위치 정보 추가
+    function addHistory() {
+        const lat = document.getElementById("latitude").value.trim();
+        const lnt = document.getElementById("longitude").value.trim();
+
+        // 필수 입력 확인
+        if (!lat || !lnt) {
+            showNotification("위도와 경도를 모두 입력해주세요.", "error");
+            return;
+        }
+
+        // 좌표 유효성 검사
+        const validation = validateCoordinates(lat, lnt);
+        if (!validation.valid) {
+            showNotification(validation.message, "error");
+            return;
+        }
+
+        fetch('history-add.jsp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `lat=${encodeURIComponent(lat)}&lnt=${encodeURIComponent(lnt)}`
+        })
+            .then(response => {
+                if (!response.ok) throw new Error('저장에 실패했습니다.');
+                return response.text();
+            })
+            .then(() => {
+                showNotification("위치 정보가 저장되었습니다.", "success");
+                setTimeout(() => location.reload(), 1000);
+            })
+            .catch(error => {
+                showNotification(error.message, "error");
+                console.error("저장 오류:", error);
+            });
+    }
+
+    // 히스토리 삭제
+    function deleteHistory(id) {
+        if (confirm(`ID ${id}번 히스토리를 삭제하시겠습니까?`)) {
+            fetch('history-delete.jsp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `id=${encodeURIComponent(id)}`
+            })
+                .then(response => {
+                    if (!response.ok) throw new Error('삭제에 실패했습니다.');
+                    return response.text();
+                })
+                .then(() => {
+                    showNotification("히스토리가 삭제되었습니다.", "success");
+                    setTimeout(() => location.reload(), 1000);
+                })
+                .catch(error => {
+                    showNotification(error.message, "error");
+                    console.error("삭제 오류:", error);
+                });
+        }
+    }
+
+    // 키보드 이벤트 처리
+    document.addEventListener('DOMContentLoaded', function() {
+        const latInput = document.getElementById('latitude');
+        const lngInput = document.getElementById('longitude');
+
+        // Enter 키로 다음 입력 필드로 이동
+        latInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                lngInput.focus();
+            }
+        });
+
+        // 경도 입력 필드에서 Enter 키로 저장
+        lngInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addHistory();
+            }
+        });
+    });
 </script>
 </body>
 </html>

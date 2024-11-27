@@ -7,7 +7,7 @@ import java.util.List;
 
 public class HistoryService {
     // DB 연결 정보
-    private static final String DB_URL = "jdbc:mariadb://localhost:3306/testdb1";
+    private static final String DB_URL = "jdbc:mariadb://192.168.219.101:3306/testdb1?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8";
     private static final String DB_USER = "root";
     private static final String DB_PASSWORD = "618811";
 
