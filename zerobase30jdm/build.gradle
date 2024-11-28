@@ -12,7 +12,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.mariadb.jdbc:mariadb-java-client:3.1.4'
+    implementation 'org.mariadb.jdbc:mariadb-java-client:3.0.3'
     implementation 'javax.servlet:javax.servlet-api:4.0.1'
     implementation 'javax.servlet.jsp:javax.servlet.jsp-api:2.3.3'
     implementation 'javax.servlet:jstl:1.2'
@@ -36,9 +36,9 @@ application {
 tasks.register('execMain', JavaExec) {
     mainClass.set('_test.test.WifiApiTest')
     classpath = sourceSets.main.runtimeClasspath
-    environment 'DB_URL', 'jdbc:mariadb://localhost:3306/your_database?useSSL=false&allowPublicKeyRetrieval=true'
+    environment 'DB_URL', 'jdbc:mariadb://192.168.219.101:3306/testdb1'
     environment 'DB_USER', 'root'
-    environment 'DB_PASSWORD', '618811'
+    environment 'DB_PASSWORD', 'Jdm4568396*'
 }
 
 java {

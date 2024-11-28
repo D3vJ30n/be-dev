@@ -7,9 +7,9 @@ import java.util.List;
 
 public class HistoryService {
     // DB 연결 정보
-    private static final String DB_URL = "jdbc:mariadb://192.168.219.101:3306/testdb1?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8";
+    private static final String DB_URL = "jdbc:mariadb://192.168.219.101:3306/testdb1";
     private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "618811";
+    private static final String DB_PASSWORD = "Jdm4568396*";
 
     static {
         try {
@@ -43,6 +43,14 @@ public class HistoryService {
             throw new RuntimeException("히스토리 목록 조회 실패", e); // 예외 처리
         }
         return historyList; // 조회된 히스토리 리스트 반환
+    }
+
+    // 위치 정보 저장 (latitude, longitude를 직접 받아 처리)
+    public void saveLocation(double latitude, double longitude) {
+        History history = new History();
+        history.setLat(latitude);
+        history.setLnt(longitude);
+        insertHistory(history); // insertHistory 메서드를 활용
     }
 
     // 위치 히스토리 저장

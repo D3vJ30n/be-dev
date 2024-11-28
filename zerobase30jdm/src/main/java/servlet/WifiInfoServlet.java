@@ -1,8 +1,6 @@
 package servlet;
 
 import com.google.gson.Gson;
-import model.WifiInfo;
-import model.WifiSpot;
 import service.WifiService;
 
 import javax.servlet.ServletException;
@@ -11,37 +9,53 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @WebServlet("/wifi-info")
 public class WifiInfoServlet extends HttpServlet {
-
-    private final WifiService wifiService = new WifiService(); // 와이파이 서비스 객체
+    private final WifiService wifiService = new WifiService();
+    private final Gson gson = new Gson();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String action = request.getParameter("action");
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
 
-        if ("load".equals(action)) {
-            // 와이파이 정보 가져오기
-            int totalCount = wifiService.fetchAndSaveWifiData(); // Open API 데이터 가져오기 및 DB 저장
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().write("{\"totalCount\": " + totalCount + "}");
-        } else if ("search".equals(action)) {
-            // 주변 와이파이 검색
-            double lat = Double.parseDouble(request.getParameter("lat"));
-            double lng = Double.parseDouble(request.getParameter("lng"));
-            List<WifiSpot> nearbyWifi = wifiService.searchNearbyWifi(lat, lng); // 위치 기반 검색
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().write(new Gson().toJson(nearbyWifi));
-        } else {
-            // 잘못된 요청 처리
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("{\"error\": \"Invalid action\", \"status\": 400}");
+        String action = request.getParameter("action");
+        System.out.println("요청된 action: " + action);
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        try {
+            if ("load".equals(action)) {
+                // 와이파이 정보 로드
+                int totalCount = wifiService.fetchAndSaveWifiData();
+
+                // 응답 데이터 생성
+                Map<String, Object> result = new HashMap<>();
+                result.put("totalCount", totalCount);
+
+                // JSON 응답 전송
+                response.getWriter().write(gson.toJson(result));
+
+            } else {
+                // 잘못된 action 파라미터
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                Map<String, String> error = new HashMap<>();
+                error.put("error", "Invalid action parameter");
+                response.getWriter().write(gson.toJson(error));
+            }
+        } catch (Exception e) {
+            // 서버 에러 처리
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Server error: " + e.getMessage());
+            response.getWriter().write(gson.toJson(error));
+
+            // 로그 출력
+            System.err.println("Error in WifiInfoServlet: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }

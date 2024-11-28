@@ -1,109 +1,77 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html lang="ko">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>와이파이 정보 가져오기</title>
+    <title>와이파이 정보 구하기</title>
     <style>
-        /* 접근성을 위한 스킵 네비게이션 */
-        .skip-link {
-            position: absolute;
-            top: -40px;
-            left: 0;
-            background: #000;
-            color: white;
-            padding: 8px;
-            z-index: 100;
-            transition: top 0.3s;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
         }
 
-        .skip-link:focus {
-            top: 0;
+        h1 {
+            margin-bottom: 20px;
         }
 
-        /* 고대비 모드 지원 */
-        @media (prefers-contrast: more) {
-            body {
-                background: white;
-                color: black;
-            }
-            .nav-link { color: #0000EE !important; }
-            button { border: 2px solid black !important; }
-        }
-
-        /* 모션 감소 모드 지원 */
-        @media (prefers-reduced-motion: reduce) {
-            * {
-                animation: none !important;
-                transition: none !important;
-            }
-        }
-
-        .center {
-            text-align: center;
-            margin-top: 50px;
-        }
-
-        .loading {
-            display: none;
-            color: #666;
+        .nav-links {
             margin: 20px 0;
-            padding: 10px;
         }
 
-        .result {
-            display: none;
-            font-weight: bold;
-            color: #008000;
-            margin: 20px 0;
-            padding: 10px;
-        }
-
-        .nav-menu {
-            margin: 20px 0;
-            padding: 10px;
-            background-color: #f8f9fa;
-            border-radius: 4px;
-        }
-
-        .nav-link {
-            margin: 0 10px;
-            color: #007bff;
+        .nav-links a {
             text-decoration: none;
-            padding: 5px;
+            color: #0D47A1;
+            margin-right: 15px;
         }
 
-        .nav-link:hover, .nav-link:focus {
-            text-decoration: underline;
-            outline: 3px solid #1a73e8;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th {
+            background-color: #04AA6D;
+            color: white;
+            text-align: center;
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #result {
+            background-color: #d4edda;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            text-align: center;
+            display: none;
         }
 
         button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
             background-color: #007bff;
             color: white;
+            padding: 10px 20px;
             border: none;
-            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 20px auto;
+            display: block;
         }
 
         button:hover {
             background-color: #0056b3;
         }
 
-        button:focus {
-            outline: 3px solid #1a73e8;
-            outline-offset: 2px;
-        }
-
-        button:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-        }
-
-        /* 스크린리더용 텍스트 */
         .sr-only {
             position: absolute;
             width: 1px;
@@ -117,45 +85,19 @@
     </style>
 </head>
 <body>
-<!-- 스킵 네비게이션 -->
-<a href="#main-content" class="skip-link">메인 콘텐츠로 바로가기</a>
+<h1>와이파이 정보 구하기</h1>
 
-<div class="container" role="main" id="main-content">
-    <h1>와이파이 정보 구하기</h1>
-
-    <!-- 네비게이션 -->
-    <nav role="navigation" aria-label="메인 메뉴">
-        <div class="nav-menu">
-            <a href="index.jsp" class="nav-link">홈</a> |
-            <a href="history.jsp" class="nav-link">위치 히스토리 목록</a> |
-            <a href="load-wifi.jsp" class="nav-link" aria-current="page">Open API 와이파이 정보 가져오기</a> |
-            <a href="bookmark-list.jsp" class="nav-link">북마크 보기</a> |
-            <a href="bookmark-group.jsp" class="nav-link">북마크 그룹 관리</a>
-        </div>
-    </nav>
-
-    <div class="center">
-        <!-- 로딩 상태 -->
-        <div id="loading" class="loading" role="status" aria-live="polite">
-            <p>와이파이 정보를 가져오는 중입니다...</p>
-            <div class="sr-only">데이터를 불러오는 중입니다. 잠시만 기다려주세요.</div>
-        </div>
-
-        <!-- 데이터 로드 버튼 -->
-        <button onclick="loadWifiData()"
-                id="loadButton"
-                aria-label="와이파이 정보 가져오기"
-                aria-describedby="button-description">
-            와이파이 정보 가져오기
-        </button>
-        <div id="button-description" class="sr-only">
-            이 버튼을 클릭하면 공공 API에서 와이파이 정보를 가져옵니다.
-        </div>
-
-        <!-- 결과 메시지 -->
-        <div id="result" class="result" role="status" aria-live="assertive"></div>
-    </div>
+<div class="nav-links">
+    <a href="index.jsp">홈</a> |
+    <a href="history.jsp">위치 히스토리 목록</a> |
+    <a href="load-wifi.jsp">Open API 와이파이 정보 가져오기</a> |
+    <a href="bookmark-list.jsp">북마크 보기</a> |
+    <a href="bookmark-group.jsp">북마크 그룹 관리</a>
 </div>
+
+<button id="loadButton" onclick="loadWifiData()">와이파이 정보 가져오기</button>
+<div id="loading">와이파이 정보를 가져오는 중입니다...</div>
+<div id="result"></div>
 
 <script>
     function loadWifiData() {
@@ -163,16 +105,12 @@
         const loading = document.getElementById('loading');
         const result = document.getElementById('result');
 
-        // 버튼 비활성화 및 상태 변경
         button.disabled = true;
         button.setAttribute('aria-busy', 'true');
-
-        // 로딩 상태 표시
         loading.style.display = 'block';
         result.style.display = 'none';
 
-        // API 호출
-        fetch('http://localhost:8080/wifi-info?action=load')
+        fetch('/wifi-info?action=load')
             .then(response => {
                 if (!response.ok) {
                     throw new Error('API 호출 실패');
@@ -182,28 +120,16 @@
             .then(data => {
                 loading.style.display = 'none';
                 result.style.display = 'block';
-                const resultMessage = `${data.totalCount}개의 WIFI 정보를 정상적으로 저장하였습니다.`;
-                result.innerHTML = resultMessage;
-
-                // 스크린리더 사용자를 위한 실시간 알림
-                announceToScreenReader(resultMessage);
-
-                // 3초 후 홈으로 이동
-                setTimeout(() => {
-                    announceToScreenReader("홈 페이지로 이동합니다.");
-                    window.location.href = 'index.jsp';
-                }, 3000);
+                console.log('Response data:', data); // 응답 데이터 로깅
+                result.textContent = `${data.totalCount}개의 WIFI 정보를 정상적으로 저장하였습니다.`;
+                announceToScreenReader(`${data.totalCount}개의 와이파이 정보를 저장했습니다.`);
             })
             .catch(error => {
                 loading.style.display = 'none';
                 result.style.display = 'block';
-                const errorMessage = '와이파이 정보 가져오기에 실패했습니다.';
-                result.innerHTML = errorMessage;
-                result.style.color = 'red';
-
-                // 에러 메시지 스크린리더 알림
-                announceToScreenReader(errorMessage);
+                result.textContent = '와이파이 정보 가져오기에 실패했습니다.';
                 console.error('Error:', error);
+                announceToScreenReader('오류가 발생했습니다. 와이파이 정보를 가져오지 못했습니다.');
             })
             .finally(() => {
                 button.disabled = false;
@@ -211,18 +137,16 @@
             });
     }
 
-    // 스크린리더 알림 함수
     function announceToScreenReader(message) {
         const announcement = document.createElement('div');
         announcement.setAttribute('role', 'status');
         announcement.setAttribute('aria-live', 'polite');
-        announcement.classList.add('sr-only');
+        announcement.className = 'sr-only';
         announcement.textContent = message;
         document.body.appendChild(announcement);
         setTimeout(() => announcement.remove(), 1000);
     }
 
-    // 키보드 접근성
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Enter' && document.activeElement.tagName === 'BUTTON') {
             e.preventDefault();

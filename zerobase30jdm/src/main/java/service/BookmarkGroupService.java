@@ -7,9 +7,9 @@ import java.util.List;
 
 public class BookmarkGroupService {
     // 데이터베이스 연결에 필요한 URL, 사용자명, 비밀번호
-    private static final String DB_URL = "jdbc:mariadb://localhost:3306/testdb1";
+    private static final String DB_URL = "jdbc:mariadb://192.168.219.101:3306/testdb1";
     private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "618811";
+    private static final String DB_PASSWORD = "Jdm4568396*";
 
     static {
         try {

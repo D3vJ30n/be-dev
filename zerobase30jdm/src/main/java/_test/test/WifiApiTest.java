@@ -2,7 +2,6 @@ package _test.test;
 
 import model.WifiSpot;
 import service.WifiService;
-
 import java.util.List;
 
 public class WifiApiTest {

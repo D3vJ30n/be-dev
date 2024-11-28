@@ -8,9 +8,9 @@ import java.util.List;
 
 public class WifiInfoDao {
 
-    private static final String DB_URL = "jdbc:mariadb://192.168.219.101:3306/testdb1?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8";
+    private static final String DB_URL = "jdbc:mariadb://192.168.219.101:3306/testdb1";
     private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "618811";
+    private static final String DB_PASSWORD = "Jdm4568396*";
 
     /**
      * DB에 저장된 모든 와이파이 정보를 가져오는 메서드

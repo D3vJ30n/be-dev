@@ -1,7 +1,9 @@
 package service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dao.WifiInfoDao;
 import model.WifiApiResponse;
+import model.WifiInfo;
 import model.WifiSpot;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -13,14 +15,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WifiService {
+    // WifiInfoDao 객체 선언 및 초기화
+    private final WifiInfoDao wifiInfoDao = new WifiInfoDao();
     // 데이터베이스 연결 정보
-    private static final String DB_URL = "jdbc:mariadb://localhost:3306/testdb1?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8";
+    private static final String DB_URL = "jdbc:mariadb://192.168.219.101:3306/testdb1";
     private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "618811";
+    private static final String DB_PASSWORD = "Jdm4568396*";
 
     // API 정보
-    private static final String API_URL = "http://openapi.seoul.go.kr:8088";
-    private static final String API_KEY = "5861565a546a787839304b4e664354";
+    private static final String API_URL = "http://openapi.seoul.go.kr:8088/4d615350666a7878383377454f7066/json/TbPublicWifiInfo/";
+    private static final String API_KEY = "4d615350666a7878383377454f7066";
 
     private final OkHttpClient httpClient;
     private final ObjectMapper objectMapper;
@@ -41,7 +45,8 @@ public class WifiService {
      * API에서 와이파이 정보를 가져오는 메서드
      */
     public WifiApiResponse getWifiInfoFromApi(int start, int end) throws IOException {
-        String url = String.format("%s/%s/json/TbPublicWifiInfo/%d/%d", API_URL, API_KEY, start, end);
+        String url = API_URL + start + "/" + end;  // 단순히 start와 end만 추가
+        System.out.println("API 호출 URL: " + url); // URL 출력 추가
 
         Request request = new Request.Builder()
             .url(url)
@@ -65,6 +70,14 @@ public class WifiService {
         int batchSize = 1000;
         int start = 1;
 
+        // DB 연결 테스트 코드 추가
+        try (Connection conn = getConnection()) {
+            System.out.println("DB 연결 성공");
+        } catch (SQLException e) {
+            System.err.println("DB 연결 실패: " + e.getMessage());
+            return totalSaved;
+        }
+
         try {
             clearWifiData(); // 기존 데이터 삭제
 
@@ -77,7 +90,26 @@ public class WifiService {
                 System.out.printf("API 호출: %d ~ %d%n", start, end);
 
                 WifiApiResponse response = getWifiInfoFromApi(start, end);
+
+                // Step 1: Check if response is null
+                if (response == null) {
+                    throw new RuntimeException("API 응답이 null입니다.");
+                }
+
+// Step 2: Check if getWifiInfo() is null
+                if (response.getWifiInfo() == null) {
+                    throw new RuntimeException("wifiInfo가 null입니다.");
+                }
+
+// Step 3: Assign and check getSpots()
                 List<WifiSpot> spots = response.getWifiInfo().getSpots();
+                if (spots == null || spots.isEmpty()) {
+                    System.out.println("Spots 리스트가 null이거나 비어 있습니다.");
+                } else {
+                    saveWifiSpots(spots);
+                    totalSaved += spots.size();
+                }
+                List<WifiSpot> wifiSpots = response.getWifiInfo().getSpots();
 
                 if (spots != null && !spots.isEmpty()) {
                     saveWifiSpots(spots);
@@ -108,12 +140,30 @@ public class WifiService {
             "x_swifi_adres1, x_swifi_adres2, x_swifi_instl_floor, x_swifi_instl_ty, " +
             "x_swifi_instl_mby, x_swifi_svc_se, x_swifi_cmcwr, x_swifi_cnstc_year, " +
             "x_swifi_inout_door, x_swifi_remars3, lat, lnt, work_dttm) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) " +
+            "ON DUPLICATE KEY UPDATE " +
+            "x_swifi_wrdofc = VALUES(x_swifi_wrdofc), " +
+            "x_swifi_main_nm = VALUES(x_swifi_main_nm), " +
+            "x_swifi_adres1 = VALUES(x_swifi_adres1), " +
+            "x_swifi_adres2 = VALUES(x_swifi_adres2), " +
+            "x_swifi_instl_floor = VALUES(x_swifi_instl_floor), " +
+            "x_swifi_instl_ty = VALUES(x_swifi_instl_ty), " +
+            "x_swifi_instl_mby = VALUES(x_swifi_instl_mby), " +
+            "x_swifi_svc_se = VALUES(x_swifi_svc_se), " +
+            "x_swifi_cmcwr = VALUES(x_swifi_cmcwr), " +
+            "x_swifi_cnstc_year = VALUES(x_swifi_cnstc_year), " +
+            "x_swifi_inout_door = VALUES(x_swifi_inout_door), " +
+            "x_swifi_remars3 = VALUES(x_swifi_remars3), " +
+            "lat = VALUES(lat), " +
+            "lnt = VALUES(lnt), " +
+            "work_dttm = VALUES(work_dttm)";
 
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             for (WifiSpot spot : spots) {
+                // **디버깅 1: 데이터가 PreparedStatement에 들어가기 전 확인**
+                System.out.println("저장할 데이터: " + spot.toString());
                 if (spot == null) {
                     System.err.println("Null 데이터가 감지되었습니다. 무시합니다.");
                     continue;
@@ -183,6 +233,11 @@ public class WifiService {
             throw new RuntimeException("WiFi 데이터 조회 실패", e);
         }
         return wifiSpots;
+    }
+
+    // 근처 와이파이 검색 메서드 추가
+    public List<WifiInfo> getNearestWifi(double latitude, double longitude) {
+        return wifiInfoDao.findNearbyWifi(latitude, longitude); // DAO 메서드 호출
     }
 
     /**
@@ -299,3 +354,4 @@ public class WifiService {
         return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
     }
 }
+
