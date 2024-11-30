@@ -1,4 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=utf-8" %>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<%
+    request.setCharacterEncoding("UTF-8"); // 가장 첫 부분에 삽입
+%>
 <%@ page import="controller.BookmarkController"%>
 <%@ page import="model.Bookmark"%>
 <%@ page import="java.util.List"%>
@@ -8,7 +12,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>북마크 목록</title>
+    <title>즐겨찾기 목록</title>
     <style>
         /* 접근성 스타일 */
         @media (prefers-reduced-motion: reduce) {
@@ -189,14 +193,14 @@
 
 <div class="container">
     <header role="banner">
-        <h1>북마크 목록</h1>
+<h1 style="text-align: center;">즐겨찾기 목록</h1>
         <nav role="navigation" aria-label="메인 메뉴">
             <div class="nav-menu">
                 <a href="index.jsp" class="nav-link">홈</a>
                 <a href="history.jsp" class="nav-link">위치 히스토리 목록</a>
                 <a href="load-wifi.jsp" class="nav-link">Open API 와이파이 정보 가져오기</a>
-                <a href="bookmark-list.jsp" class="nav-link" aria-current="page">북마크 보기</a>
-                <a href="bookmark-group.jsp" class="nav-link">북마크 그룹 관리</a>
+                <a href="bookmark-list.jsp" class="nav-link" aria-current="page">즐겨찾기 보기</a>
+                <a href="bookmark-group.jsp" class="nav-link">즐겨찾기 그룹 관리</a>
             </div>
         </nav>
     </header>
@@ -207,11 +211,11 @@
         <table role="table" aria-label="북마크 목록">
             <thead>
             <tr>
-                <th scope="col">ID</th>
-                <th scope="col">북마크 그룹 이름</th>
-                <th scope="col">와이파이명</th>
-                <th scope="col">등록일자</th>
-                <th scope="col">비고</th>
+<th scope="col" style="text-align: center;">ID</th>
+<th scope="col" style="text-align: center;">즐겨찾기 그룹 이름</th>
+<th scope="col" style="text-align: center;">와이파이명</th>
+<th scope="col" style="text-align: center;">등록일자</th>
+<th scope="col" style="text-align: center;">비고</th>
             </tr>
             </thead>
             <tbody>
@@ -223,7 +227,7 @@
                 if (bookmarkList.isEmpty()) {
             %>
             <tr>
-                <td colspan="5" class="no-data">북마크가 없습니다.</td>
+<td colspan="5" class="no-data" style="color: black;">즐겨찾기가 없습니다.</td>
             </tr>
             <%
             } else {
@@ -249,7 +253,7 @@
                 <td>
                     <button onclick="deleteBookmark(<%= bookmark.getId() %>)"
                             class="button button-delete"
-                            aria-label="<%= bookmark.getWifiName() %> 북마크 삭제">
+                            aria-label="<%= bookmark.getWifiName() %> 즐겨찾기 삭제">
                         삭제
                     </button>
                 </td>
@@ -264,19 +268,19 @@
 </div>
 
 <script>
-    // 북마크 삭제 처리
+    // 즐겨찾기 삭제 처리
     function deleteBookmark(id) {
-        if(confirm('이 북마크를 삭제하시겠습니까?')) {
-            announceToScreenReader('북마크를 삭제합니다.');
+        if(confirm('이 즐겨찾기를 삭제하시겠습니까?')) {
+            announceToScreenReader('즐겨찾기를 삭제합니다.');
 
             const xhr = new XMLHttpRequest();
-            xhr.open('POST', 'bookmark-delete.jsp', true);
+            xhr.open('POST', 'bookmark-group-delete.jsp', true);
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200) {
-                        showAlert('북마크가 삭제되었습니다.', 'success');
+                        showAlert('즐겨찾기가 삭제되었습니다.', 'success');
                         location.reload();
                     } else {
                         showAlert('삭제 중 오류가 발생했습니다.', 'error');
@@ -326,8 +330,8 @@
     window.onload = function() {
         const totalBookmarks = document.querySelectorAll('table tbody tr').length;
         const message = totalBookmarks === 0 ?
-            '북마크가 없습니다.' :
-            `총 ${totalBookmarks}개의 북마크가 있습니다.`;
+            '즐겨찾기가 없습니다.' :
+            `총 ${totalBookmarks}개의 즐겨찾기가 있습니다.`;
         announceToScreenReader(message);
     };
 </script>

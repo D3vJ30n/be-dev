@@ -1,4 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=utf-8" %>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<%
+    request.setCharacterEncoding("UTF-8"); // 가장 첫 부분에 삽입
+%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
@@ -16,7 +20,7 @@
 
         td, th {
             border: 1px solid #ddd;
-            text-align: left;
+            text-align: center;
             padding: 8px;
         }
 
@@ -32,6 +36,7 @@
         /* 버튼 그룹 스타일 */
         .button-group {
             margin: 20px 0;
+            text-align: center;
         }
 
         button {
@@ -43,27 +48,75 @@
             outline: 2px solid #04AA6D; /* 버튼 포커스 시 테두리 강조 */
         }
 
+        .button-container {
+            display: flex; /* 플렉스박스를 사용하여 정렬 */
+            justify-content: center; /* 버튼들을 가로 중앙 정렬 */
+            gap: 10px; /* 버튼 간 간격 */
+            margin-top: 15px; /* 상단 여백 */
+        }
+
+        .action-button {
+            padding: 8px 16px; /* 버튼 내부 여백 */
+            background-color: #007bff; /* 버튼 배경색 */
+            color: white; /* 버튼 글자색 */
+            border: none; /* 테두리 제거 */
+            border-radius: 4px; /* 버튼 모서리를 둥글게 */
+            cursor: pointer; /* 마우스 포인터 변경 */
+        }
+
+        .action-button:hover {
+            background-color: #0056b3; /* 호버 시 버튼 배경색 변경 */
+        }
+
+        .action-button:focus {
+            outline: 3px solid #1a73e8; /* 포커스 외곽선 */
+            outline-offset: 2px; /* 외곽선 간격 */
+        }
+
         /* 네비게이션 메뉴 스타일 */
         .nav-group {
-            margin-bottom: 20px;
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            text-align: center;
         }
 
         .nav-group a {
             margin-right: 15px;
         }
+
+        .nav-link {
+            margin: 0 10px;
+            color: #007bff; /* 기본 글자 색상 */
+            text-decoration: none; /* 밑줄 제거 */
+            padding: 5px; /* 내부 여백 */
+            border-radius: 4px; /* 둥근 모서리 */
+            transition: all 0.3s ease; /* 부드러운 호버 효과 */
+        }
+
+        .nav-link:hover {
+            text-decoration: underline; /* 마우스 호버 시 밑줄 */
+        }
+
+        .nav-link:focus {
+            outline: 3px solid #1a73e8; /* 포커스 시 외곽선 */
+            outline-offset: 2px; /* 외곽선 간격 */
+        }
+
     </style>
 </head>
 <body>
-<h1>와이파이 정보 구하기</h1>
+<h1 style="text-align: center;">와이파이 정보 구하기</h1>
 
 <!-- 네비게이션 메뉴 -->
 <div class="nav-group">
     <!-- 네비게이션 링크, aria-label로 목적 설명 -->
-    <a href="index.jsp" aria-label="홈으로 이동">홈</a> |
-    <a href="history.jsp" aria-label="위치 히스토리 목록 페이지로 이동">위치 히스토리 목록</a> |
-    <a href="load-wifi.jsp" aria-label="Open API 와이파이 정보 가져오기 페이지로 이동">Open API 와이파이 정보 가져오기</a> |
-    <a href="bookmark-list.jsp" aria-label="북마크 보기 페이지로 이동">북마크 보기</a> |
-    <a href="bookmark-group.jsp" aria-label="북마크 그룹 관리 페이지로 이동">북마크 그룹 관리</a>
+    <a href="index.jsp" class="nav-link" aria-label="홈으로 이동">홈</a>
+    <a href="history.jsp" class="nav-link" aria-label="위치 히스토리 목록 페이지로 이동">위치 히스토리 목록</a>
+    <a href="load-wifi.jsp" class="nav-link" aria-label="Open API 와이파이 정보 가져오기 페이지로 이동">Open API 와이파이 정보 가져오기</a>
+    <a href="bookmark-list.jsp" class="nav-link" aria-label="즐겨찾기 보기 페이지로 이동">즐겨찾기 보기</a>
+    <a href="bookmark-group.jsp" class="nav-link" aria-label="즐겨찾기 그룹 관리 페이지로 이동">즐겨찾기 그룹 관리</a>
 </div>
 
 <!-- 위치 정보 입력 및 버튼 -->
@@ -79,14 +132,13 @@
     <div id="lnt-desc" hidden>경도를 입력하는 필드입니다.</div>
 
     <!-- 버튼: 현재 위치 가져오기 -->
-    <button onclick="getLocation()" aria-label="현재 위치 정보를 가져옵니다">내 위치 가져오기</button>
+<button onclick="getLocation()" aria-label="현재 위치 정보를 가져옵니다" class="action-button" style="margin-left: 10px;">내 위치 가져오기</button>
     <!-- 버튼: 근처 와이파이 정보 보기 -->
-    <button onclick="getNearbyWifi()" aria-label="입력된 위치를 기준으로 근처 와이파이 정보를 가져옵니다">근처 WIFI 정보 보기</button>
+    <button onclick="getNearbyWifi()" aria-label="입력된 위치를 기준으로 근처 와이파이 정보를 가져옵니다" class="action-button">근처 WIFI 정보 보기</button>
 </div>
 
 <!-- 와이파이 정보 테이블 -->
 <table>
-    <caption>사용자가 입력한 위치를 기준으로 검색된 근처 와이파이 정보</caption> <!-- 테이블 설명 -->
     <thead>
     <tr>
         <!-- 테이블 헤더 정의 -->

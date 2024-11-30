@@ -1,4 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=utf-8" %>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<%
+    request.setCharacterEncoding("UTF-8"); // 가장 첫 부분에 삽입
+%>
 <%@ page import="controller.HistoryController"%>
 <%@ page import="model.History"%>
 <%@ page import="java.util.List"%>
@@ -9,7 +13,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>위치 히스토리 목록</title>
-    <style>
+   <style>
         /* 접근성을 고려한 스타일 */
         @media (prefers-reduced-motion: reduce) {
             * {
@@ -29,6 +33,7 @@
             th {
                 background-color: black !important;
                 color: white !important;
+                text-align: center;
             }
         }
 
@@ -96,14 +101,16 @@
         }
 
         th, td {
-            padding: 12px;
-            text-align: left;
-            border: 1px solid #ddd;
+            padding: 12px;         /* 셀 안의 여백 */
+            text-align: center;    /* 수평 중앙 정렬 */
+            vertical-align: middle; /* 수직 중앙 정렬 추가 */
+            border: 1px solid #ddd; /* 셀 경계 */
         }
 
         th {
             background-color: #04AA6D;
             color: white;
+            text-align: center;
         }
 
         tr:nth-child(even) {
@@ -218,8 +225,8 @@
                 <a href="index.jsp" class="nav-link" aria-label="홈으로 이동">홈</a>
                 <a href="history.jsp" class="nav-link" aria-current="page">위치 히스토리 목록</a>
                 <a href="load-wifi.jsp" class="nav-link">Open API 와이파이 정보 가져오기</a>
-                <a href="bookmark-list.jsp" class="nav-link">북마크 보기</a>
-                <a href="bookmark-group.jsp" class="nav-link">북마크 그룹 관리</a>
+                <a href="bookmark-list.jsp" class="nav-link">즐겨찾기 보기</a>
+                <a href="bookmark-group.jsp" class="nav-link">즐겨찾기 그룹 관리</a>
             </div>
         </nav>
     </header>
@@ -251,13 +258,13 @@
 
         <table role="table" aria-label="위치 히스토리 목록">
             <thead>
-            <tr>
-                <th scope="col">ID</th>
-                <th scope="col">X좌표</th>
-                <th scope="col">Y좌표</th>
-                <th scope="col">조회일자</th>
-                <th scope="col">비고</th>
-            </tr>
+<tr>
+    <th scope="col" style="text-align: center;">ID</th>
+    <th scope="col" style="text-align: center;">X좌표</th>
+    <th scope="col" style="text-align: center;">Y좌표</th>
+    <th scope="col" style="text-align: center;">조회일자</th>
+    <th scope="col" style="text-align: center;">비고</th>
+</tr>
             </thead>
             <tbody>
             <%
@@ -268,7 +275,7 @@
                 if (historyList.isEmpty()) {
             %>
             <tr>
-                <td colspan="5" class="no-data">위치 히스토리가 없습니다.</td>
+<td colspan="5" class="no-data" style="color: black;">위치 히스토리가 없습니다.</td>
             </tr>
             <%
             } else {

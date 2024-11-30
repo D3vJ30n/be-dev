@@ -7,7 +7,7 @@ import java.util.List;
 
 public class BookmarkGroupService {
     // 데이터베이스 연결에 필요한 URL, 사용자명, 비밀번호
-    private static final String DB_URL = "jdbc:mariadb://192.168.219.101:3306/testdb1";
+    private static final String DB_URL = "jdbc:mariadb://192.168.219.101:3306/testdb1?useUnicode=true&characterEncoding=UTF-8";
     private static final String DB_USER = "root";
     private static final String DB_PASSWORD = "Jdm4568396*";
 
@@ -20,7 +20,7 @@ public class BookmarkGroupService {
         }
     }
 
-    // 북마크 그룹 목록 조회
+    // 즐겨찾기 그룹 목록 조회
     public List<BookmarkGroup> getBookmarkGroupList() {
         List<BookmarkGroup> groupList = new ArrayList<>();
         String sql = "SELECT * FROM bookmark_group ORDER BY order_no"; // 그룹 순서(order_no)대로 조회
@@ -40,12 +40,12 @@ public class BookmarkGroupService {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException("북마크 그룹 목록 조회 실패", e); // 예외 처리
+            throw new RuntimeException("즐겨찾기 그룹 목록 조회 실패", e); // 예외 처리
         }
         return groupList;
     }
 
-    // 북마크 그룹 추가
+    // 즐겨찾기 그룹 추가
     public void insertBookmarkGroup(BookmarkGroup group) {
         String sql = "INSERT INTO bookmark_group (name, order_no, reg_dttm) VALUES (?, ?, ?)"; // INSERT 쿼리
 
@@ -58,15 +58,15 @@ public class BookmarkGroupService {
 
             int result = pstmt.executeUpdate();
             if (result != 1) { // 삽입된 레코드가 하나가 아니면 오류
-                throw new SQLException("북마크 그룹 추가 실패");
+                throw new SQLException("즐겨찾기 그룹 추가 실패");
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException("북마크 그룹 추가 실패", e); // 예외 처리
+            throw new RuntimeException("즐겨찾기 그룹 추가 실패", e); // 예외 처리
         }
     }
 
-    // 북마크 그룹 수정
+    // 즐겨찾기 그룹 수정
     public void updateBookmarkGroup(BookmarkGroup group) {
         String sql = "UPDATE bookmark_group SET name = ?, order_no = ?, upd_dttm = ? WHERE id = ?"; // UPDATE 쿼리
 
@@ -80,22 +80,22 @@ public class BookmarkGroupService {
 
             int result = pstmt.executeUpdate();
             if (result != 1) { // 수정된 레코드가 하나가 아니면 오류
-                throw new SQLException("수정할 북마크 그룹이 존재하지 않습니다. ID: " + group.getId());
+                throw new SQLException("수정할 즐겨찾기 그룹이 존재하지 않습니다. ID: " + group.getId());
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException("북마크 그룹 수정 실패", e); // 예외 처리
+            throw new RuntimeException("즐겨찾기 그룹 수정 실패", e); // 예외 처리
         }
     }
 
-    // 북마크 그룹 삭제 (연관된 북마크도 함께 삭제)
+    // 즐겨찾기 그룹 삭제 (연관된 즐겨찾기도 함께 삭제)
     public void deleteBookmarkGroup(int id) {
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
             conn.setAutoCommit(false); // 트랜잭션 시작
 
-            // 먼저 해당 그룹의 북마크들을 삭제
+            // 먼저 해당 그룹의 즐겨찾기들을 삭제
             String deleteBookmarksSql = "DELETE FROM bookmark WHERE group_id = ?";
             try (PreparedStatement pstmt = conn.prepareStatement(deleteBookmarksSql)) {
                 pstmt.setInt(1, id);
@@ -108,7 +108,7 @@ public class BookmarkGroupService {
                 pstmt.setInt(1, id);
                 int result = pstmt.executeUpdate();
                 if (result != 1) { // 삭제할 그룹이 없으면 오류
-                    throw new SQLException("삭제할 북마크 그룹이 존재하지 않습니다. ID: " + id);
+                    throw new SQLException("삭제할 즐겨찾기 그룹이 존재하지 않습니다. ID: " + id);
                 }
             }
 
@@ -122,7 +122,7 @@ public class BookmarkGroupService {
                 }
             }
             e.printStackTrace();
-            throw new RuntimeException("북마크 그룹 삭제 실패", e); // 예외 처리
+            throw new RuntimeException("즐겨찾기 그룹 삭제 실패", e); // 예외 처리
         } finally {
             if (conn != null) {
                 try {
@@ -135,7 +135,7 @@ public class BookmarkGroupService {
         }
     }
 
-    // 특정 북마크 그룹 조회
+    // 특정 즐겨찾기 그룹 조회
     public BookmarkGroup getBookmarkGroup(int id) {
         String sql = "SELECT * FROM bookmark_group WHERE id = ?"; // 특정 그룹 조회 쿼리
 
@@ -157,7 +157,7 @@ public class BookmarkGroupService {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException("북마크 그룹 조회 실패", e); // 예외 처리
+            throw new RuntimeException("즐겨찾기 그룹 조회 실패", e); // 예외 처리
         }
         return null; // 해당 그룹이 없으면 null 반환
     }

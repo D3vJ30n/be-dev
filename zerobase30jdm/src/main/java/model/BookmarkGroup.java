@@ -5,13 +5,13 @@ import java.util.Objects;
 
 /**
  * BookmarkGroup 클래스
- * 북마크 그룹 데이터를 표현하는 모델 클래스
- * 북마크 그룹 테이블의 필드와 이를 다루기 위한 메서드 포함
+ * 즐겨찾기 그룹 데이터를 표현하는 모델 클래스
+ * 즐겨찾기 그룹 테이블의 필드와 이를 다루기 위한 메서드 포함
  */
 public class BookmarkGroup {
-    // 북마크 그룹 테이블 필드 (ERD 기준)
-    private int id;              // 북마크 그룹 ID (PK)
-    private String name;         // 북마크 그룹 이름
+    // 즐겨찾기 그룹 테이블 필드 (ERD 기준)
+    private int id;              // 즐겨찾기 그룹 ID (PK)
+    private String name;         // 즐겨찾기 그룹 이름
     private int orderNo;         // 순서 (정렬을 위한 값)
     private Timestamp regDttm;   // 등록일자
     private Timestamp updDttm;   // 수정일자
@@ -35,7 +35,7 @@ public class BookmarkGroup {
 
     /**
      * ID 가져오기
-     * @return 북마크 그룹 ID
+     * @return 즐겨찾기 그룹 ID
      */
     public int getId() {
         return id;
@@ -43,7 +43,7 @@ public class BookmarkGroup {
 
     /**
      * ID 설정
-     * @param id 북마크 그룹 ID
+     * @param id 즐겨찾기 그룹 ID
      */
     public void setId(int id) {
         this.id = id;

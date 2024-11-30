@@ -21,20 +21,20 @@ public class BookmarkController {
     }
 
     /**
-     * 북마크 목록 조회
-     * @return 북마크 목록
+     * 즐겨찾기 목록 조회
+     * @return 즐겨찾기 목록
      */
     public List<Bookmark> getBookmarkList() {
         try {
             return bookmarkService.getBookmarkList();
         } catch (RuntimeException e) {
-            System.err.println("북마크 목록 조회 중 오류 발생: " + e.getMessage());
+            System.err.println("즐겨찾기 목록 조회 중 오류 발생: " + e.getMessage());
             throw e;
         }
     }
 
     /**
-     * 북마크 추가
+     * 즐겨찾기 추가
      * @param groupId 그룹 ID
      * @param wifiMgrNo 와이파이 관리번호
      * @param wifiName 와이파이 이름
@@ -43,6 +43,11 @@ public class BookmarkController {
         try {
             // 입력값 검증
             validateInput(groupId, wifiMgrNo);
+
+            // 중복 확인
+            if (isDuplicateBookmark(groupId, wifiMgrNo)) {
+                throw new IllegalArgumentException("해당 그룹에 동일한 와이파이가 이미 즐겨찾기되어 있습니다.");
+            }
 
             Bookmark bookmark = new Bookmark();
             bookmark.setGroupId(groupId);
@@ -54,14 +59,15 @@ public class BookmarkController {
             System.err.println("유효하지 않은 입력값: " + e.getMessage());
             throw e;
         } catch (RuntimeException e) {
-            System.err.println("북마크 추가 중 오류 발생: " + e.getMessage());
+            System.err.println("즐겨찾기 추가 중 오류 발생: " + e.getMessage());
             throw e;
         }
     }
 
+
     /**
-     * 북마크 삭제
-     * @param id 북마크 ID
+     * 즐겨찾기 삭제
+     * @param id 즐겨찾기 ID
      */
     public void deleteBookmark(int id) {
         try {
@@ -70,15 +76,15 @@ public class BookmarkController {
             }
             bookmarkService.deleteBookmark(id);
         } catch (RuntimeException e) {
-            System.err.println("북마크 삭제 중 오류 발생: " + e.getMessage());
+            System.err.println("즐겨찾기 삭제 중 오류 발생: " + e.getMessage());
             throw e;
         }
     }
 
     /**
-     * 단일 북마크 조회
-     * @param id 북마크 ID
-     * @return 조회된 북마크
+     * 단일 즐겨찾기 조회
+     * @param id 즐겨찾기 ID
+     * @return 조회된 즐겨찾기
      */
     public Bookmark getBookmark(int id) {
         try {
@@ -87,15 +93,15 @@ public class BookmarkController {
             }
             return bookmarkService.getBookmark(id);
         } catch (RuntimeException e) {
-            System.err.println("북마크 조회 중 오류 발생: " + e.getMessage());
+            System.err.println("즐겨찾기 조회 중 오류 발생: " + e.getMessage());
             throw e;
         }
     }
 
     /**
-     * 그룹별 북마크 목록 조회
+     * 그룹별 즐겨찾기 목록 조회
      * @param groupId 그룹 ID
-     * @return 그룹에 속한 북마크 목록
+     * @return 그룹에 속한 즐겨찾기 목록
      */
     public List<Bookmark> getBookmarkListByGroupId(int groupId) {
         try {
@@ -104,7 +110,7 @@ public class BookmarkController {
             }
             return bookmarkService.getBookmarkListByGroupId(groupId);
         } catch (RuntimeException e) {
-            System.err.println("그룹별 북마크 목록 조회 중 오류 발생: " + e.getMessage());
+            System.err.println("그룹별 즐겨찾기 목록 조회 중 오류 발생: " + e.getMessage());
             throw e;
         }
     }
@@ -127,7 +133,7 @@ public class BookmarkController {
     }
 
     /**
-     * 북마크 존재 여부 확인
+     * 즐겨찾기 존재 여부 확인
      * @param id 북마크 ID
      * @return 존재 여부 (true/false)
      */
@@ -140,22 +146,22 @@ public class BookmarkController {
     }
 
     /**
-     * 특정 그룹의 북마크 개수 조회
+     * 특정 그룹의 즐겨찾기 개수 조회
      * @param groupId 그룹 ID
-     * @return 해당 그룹의 북마크 개수
+     * @return 해당 그룹의 즐겨찾기 개수
      */
     public int getBookmarkCountByGroupId(int groupId) {
         try {
             return getBookmarkListByGroupId(groupId).size();
         } catch (RuntimeException e) {
-            System.err.println("그룹별 북마크 개수 조회 중 오류 발생: " + e.getMessage());
+            System.err.println("그룹별 즐겨찾기 개수 조회 중 오류 발생: " + e.getMessage());
             return 0;
         }
     }
 
     /**
-     * 중복 북마크 체크
-     * 같은 그룹에 동일한 와이파이가 이미 북마크되어 있는지 확인
+     * 중복 즐겨찾기 체크
+     * 같은 그룹에 동일한 와이파이가 이미 즐겨찾기 되어 있는지 확인
      * @param groupId 그룹 ID
      * @param wifiMgrNo 와이파이 관리번호
      * @return 중복 여부 (true/false)
@@ -166,7 +172,7 @@ public class BookmarkController {
             return groupBookmarks.stream()
                 .anyMatch(b -> b.getWifiMgrNo().equals(wifiMgrNo));
         } catch (RuntimeException e) {
-            System.err.println("북마크 중복 체크 중 오류 발생: " + e.getMessage());
+            System.err.println("즐겨찾기 중복 체크 중 오류 발생: " + e.getMessage());
             return false;
         }
     }

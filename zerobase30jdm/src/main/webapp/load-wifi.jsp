@@ -1,4 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=utf-8" %>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<%
+    request.setCharacterEncoding("UTF-8"); // 가장 첫 부분에 삽입
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -91,8 +95,8 @@
     <a href="index.jsp">홈</a> |
     <a href="history.jsp">위치 히스토리 목록</a> |
     <a href="load-wifi.jsp">Open API 와이파이 정보 가져오기</a> |
-    <a href="bookmark-list.jsp">북마크 보기</a> |
-    <a href="bookmark-group.jsp">북마크 그룹 관리</a>
+    <a href="bookmark-list.jsp">즐겨찾기 보기</a> |
+    <a href="bookmark-group.jsp">즐겨찾기 그룹 관리</a>
 </div>
 
 <button id="loadButton" onclick="loadWifiData()">와이파이 정보 가져오기</button>

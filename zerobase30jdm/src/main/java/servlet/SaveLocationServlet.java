@@ -13,6 +13,9 @@ import java.io.IOException;
 public class SaveLocationServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
         try {
             // 입력값 받기
             double latitude = Double.parseDouble(request.getParameter("latitude"));

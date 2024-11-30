@@ -28,13 +28,13 @@ public class BookmarkGroupController {
         try {
             return bookmarkGroupService.getBookmarkGroupList();
         } catch (RuntimeException e) {
-            System.err.println("북마크 그룹 목록 조회 중 오류 발생: " + e.getMessage());
+            System.err.println("즐겨찾기 그룹 목록 조회 중 오류 발생: " + e.getMessage());
             throw e;
         }
     }
 
     /**
-     * 북마크 그룹 추가
+     * 즐겨찾기 그룹 추가
      * @param name 그룹 이름
      * @param orderNo 그룹 순서
      */
@@ -57,13 +57,13 @@ public class BookmarkGroupController {
             System.err.println("유효하지 않은 입력값: " + e.getMessage());
             throw e;
         } catch (RuntimeException e) {
-            System.err.println("북마크 그룹 추가 중 오류 발생: " + e.getMessage());
+            System.err.println("즐겨찾기 그룹 추가 중 오류 발생: " + e.getMessage());
             throw e;
         }
     }
 
     /**
-     * 북마크 그룹 수정
+     * 즐겨찾기 그룹 수정
      * @param id 그룹 ID
      * @param name 그룹 이름
      * @param orderNo 그룹 순서
@@ -88,13 +88,13 @@ public class BookmarkGroupController {
             System.err.println("유효하지 않은 입력값: " + e.getMessage());
             throw e;
         } catch (RuntimeException e) {
-            System.err.println("북마크 그룹 수정 중 오류 발생: " + e.getMessage());
+            System.err.println("즐겨찾기 그룹 수정 중 오류 발생: " + e.getMessage());
             throw e;
         }
     }
 
     /**
-     * 북마크 그룹 삭제
+     * 즐겨찾기 그룹 삭제
      * @param id 그룹 ID
      */
     public void deleteBookmarkGroup(int id) {
@@ -106,20 +106,20 @@ public class BookmarkGroupController {
             // 삭제 전 존재 여부 확인
             BookmarkGroup group = bookmarkGroupService.getBookmarkGroup(id);
             if (group == null) {
-                throw new IllegalArgumentException("존재하지 않는 북마크 그룹입니다.");
+                throw new IllegalArgumentException("존재하지 않는 즐겨찾기 그룹입니다.");
             }
 
             bookmarkGroupService.deleteBookmarkGroup(id);
         } catch (RuntimeException e) {
-            System.err.println("북마크 그룹 삭제 중 오류 발생: " + e.getMessage());
+            System.err.println("즐겨찾기 그룹 삭제 중 오류 발생: " + e.getMessage());
             throw e;
         }
     }
 
     /**
-     * 북마크 그룹 상세 조회
+     * 즐겨찾기 그룹 상세 조회
      * @param id 그룹 ID
-     * @return 조회된 북마크 그룹
+     * @return 조회된 즐겨찾기 그룹
      */
     public BookmarkGroup getBookmarkGroup(int id) {
         try {
@@ -128,7 +128,7 @@ public class BookmarkGroupController {
             }
             return bookmarkGroupService.getBookmarkGroup(id);
         } catch (RuntimeException e) {
-            System.err.println("북마크 그룹 조회 중 오류 발생: " + e.getMessage());
+            System.err.println("즐겨찾기 그룹 조회 중 오류 발생: " + e.getMessage());
             throw e;
         }
     }
@@ -199,3 +199,4 @@ public class BookmarkGroupController {
         }
     }
 }
+
