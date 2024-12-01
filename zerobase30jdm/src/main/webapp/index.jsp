@@ -197,37 +197,60 @@
         }
     }
 
-
-
-    // getNearbyWifi 함수
     function getNearbyWifi() {
-        let lat = document.getElementById("lat").value.trim();
-        let lnt = document.getElementById("lnt").value.trim();
-        let radius = 30; // 반경 값을 30으로 설정
+        const lat = document.getElementById("lat").value.trim();
+        const lnt = document.getElementById("lnt").value.trim();
+        const radius = 30;
 
-        console.log("Latitude (위도):", lat);
-        console.log("Longitude (경도):", lnt);
-
+        // 수정된 체크 로직
         if (!lat || !lnt || lat === "0.0" || lnt === "0.0") {
             alert("위치 정보를 입력해주세요.");
             return;
         }
 
-        const url = `http://192.168.219.100:8080/wifi-info?action=nearby&lat=${lat}&lnt=${lnt}&radius=30`;
-        console.log("API 요청 URL:", url);
+        // URL 생성 방식 변경
+        var url = "http://192.168.219.100:8080/wifi-info?action=nearby&lat=" +
+            encodeURIComponent(lat) + "&lnt=" + encodeURIComponent(lnt) +
+            "&radius=" + radius;
+        console.log("Request URL:", url);
 
-        fetch(url)
-            .then(response => {
+        // 먼저 위치 히스토리 저장
+        fetch('http://192.168.219.100:8080/location/save', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                latitude: lat,
+                longitude: lnt
+            })
+        })
+            .then(function(response) {
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    throw new Error('위치 히스토리 저장 실패');
+                }
+                // 위치 히스토리 저장 성공 후 와이파이 정보 조회
+                return fetch(url);
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('HTTP error! status: ' + response.status);
                 }
                 return response.json();
             })
-            .then(data => {
+            .then(function(data) {
                 console.log('API Response:', data);
-                updateWifiList(data);  // 받아온 데이터로 테이블 업데이트
-                saveLocationHistory(lat, lnt);  // 위치 히스토리 저장
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+                updateWifiList(data);
             })
+            .catch(function(error) {
+                console.error('Error:', error);
+                alert('데이터를 가져오는데 실패했습니다: ' + error.message);
+            });
+    }
 
     function updateWifiList(wifiList) {
         const tbody = document.getElementById("wifi-list");
@@ -289,7 +312,6 @@
                     console.error("Error saving location history:", error);
                     alert("Failed to save location history. Please try again later.");
                 });
-        }
     }
 </script>
 </body>

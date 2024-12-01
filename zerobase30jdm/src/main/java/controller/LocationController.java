@@ -19,10 +19,6 @@ public class LocationController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("doPost() 호출됨");
-        System.out.println("Latitude: " + req.getParameter("latitude"));
-        System.out.println("Longitude: " + req.getParameter("longitude"));
-
         resp.setHeader("Access-Control-Allow-Origin", "*");
         resp.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
         resp.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
@@ -40,11 +36,13 @@ public class LocationController extends HttpServlet {
             }
         }
 
+        System.out.println("Received JSON: " + requestBody); // 디버깅용 출력
+
         // JSON 파싱
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap;
         try {
-            jsonMap = objectMapper.readValue(req.getReader(), new TypeReference<Map<String, Object>>() {});
+            jsonMap = objectMapper.readValue(requestBody.toString(), new TypeReference<Map<String, Object>>() {});
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             resp.getWriter().write("{\"error\": \"Invalid JSON format\"}");
