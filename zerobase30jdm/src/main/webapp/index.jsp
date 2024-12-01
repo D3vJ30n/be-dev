@@ -136,7 +136,6 @@
     <thead>
     <tr>
         <!-- 테이블 헤더 정의 -->
-        <th scope="col">거리(Km)</th>
         <th scope="col">관리번호</th>
         <th scope="col">자치구</th>
         <th scope="col">와이파이명</th>
@@ -166,55 +165,38 @@
 </table>
 
 <script>
-    // 현재 위치 정보를 가져오는 함수
     function getLocation() {
-        if (navigator.geolocation) { // 브라우저에서 geolocation API 지원 여부 확인
-            navigator.geolocation.getCurrentPosition(
-                function(position) { // 위치 정보를 성공적으로 가져온 경우
-                    document.getElementById("lat").value = position.coords.latitude; // 위도 설정
-                    document.getElementById("lnt").value = position.coords.longitude; // 경도 설정
-                },
-                function(error) { // 위치 정보 가져오기 실패 시 처리
-                    let errorMsg = ""; // 오류 메시지 변수
-                    switch (error.code) {
-                        case error.PERMISSION_DENIED:
-                            errorMsg = "위치 정보 사용이 허용되지 않았습니다.";
-                            break;
-                        case error.POSITION_UNAVAILABLE:
-                            errorMsg = "위치 정보를 사용할 수 없습니다.";
-                            break;
-                        case error.TIMEOUT:
-                            errorMsg = "위치 정보를 가져오는데 시간이 초과되었습니다.";
-                            break;
-                        default:
-                            errorMsg = "알 수 없는 오류가 발생했습니다.";
-                    }
-                    alert(errorMsg); // 사용자에게 오류 메시지 표시
-                }
-            );
-        } else {
-            alert("이 브라우저에서는 위치 정보를 제공하지 않습니다."); // 지원되지 않는 브라우저 처리
-        }
+        // 서울 주요 지역 좌표 목록 (모두 실제 좌표값입니다)
+        const seoulLocations = [
+            { name: '서울금천구', lat: 37.44910833, lnt: 126.9041972},
+            { name: '서울구로구', lat: 37.49265, lnt: 126.8895972},
+        ];
+
+        // 랜덤하게 한 장소 선택
+        const randomLocation = seoulLocations[Math.floor(Math.random() * seoulLocations.length)];
+
+        document.getElementById("lat").value = randomLocation.lat;
+        document.getElementById("lnt").value = randomLocation.lnt;
+
     }
 
     function getNearbyWifi() {
-        const lat = document.getElementById("lat").value.trim();
-        const lnt = document.getElementById("lnt").value.trim();
-        const radius = 30;
+        var lat = document.getElementById("lat").value.trim();
+        var lnt = document.getElementById("lnt").value.trim();
+        var radius = 30;
 
-        // 수정된 체크 로직
         if (!lat || !lnt || lat === "0.0" || lnt === "0.0") {
             alert("위치 정보를 입력해주세요.");
             return;
         }
 
-        // URL 생성 방식 변경
         var url = "http://192.168.219.100:8080/wifi-info?action=nearby&lat=" +
             encodeURIComponent(lat) + "&lnt=" + encodeURIComponent(lnt) +
             "&radius=" + radius;
-        console.log("Request URL:", url);
 
-        // 먼저 위치 히스토리 저장
+        console.log("요청 URL:", url);
+
+        // 위치 히스토리 저장 후 와이파이 정보 조회
         fetch('http://192.168.219.100:8080/location/save', {
             method: 'POST',
             headers: {
@@ -225,93 +207,90 @@
                 longitude: lnt
             })
         })
-            .then(function(response) {
-                if (!response.ok) {
-                    throw new Error('위치 히스토리 저장 실패');
-                }
-                // 위치 히스토리 저장 성공 후 와이파이 정보 조회
+            .then(response => {
+                if (!response.ok) throw new Error('위치 히스토리 저장 실패');
                 return fetch(url);
             })
-            .then(function(response) {
-                if (!response.ok) {
-                    throw new Error('HTTP error! status: ' + response.status);
-                }
+            .then(response => {
+                if (!response.ok) throw new Error('HTTP error! status: ' + response.status);
                 return response.json();
             })
-            .then(function(data) {
-                console.log('API Response:', data);
-                if (data.error) {
+            .then(data => {
+                console.log('API 응답 데이터:', data); // 응답 데이터 구조 확인
+                if (Array.isArray(data)) {
+                    updateWifiList(data);
+                } else if (data.error) {
                     alert(data.error);
-                    return;
+                } else {
+                    throw new Error('잘못된 데이터 형식입니다.');
                 }
-                updateWifiList(data);
             })
-            .catch(function(error) {
-                console.error('Error:', error);
+            .catch(error => {
+                console.error('에러:', error);
                 alert('데이터를 가져오는데 실패했습니다: ' + error.message);
             });
     }
 
     function updateWifiList(wifiList) {
-        const tbody = document.getElementById("wifi-list");
-        tbody.innerHTML = ""; // 기존 테이블 데이터 초기화
+        var tbody = document.getElementById("wifi-list");
+        tbody.innerHTML = "";
 
-        if (!Array.isArray(wifiList) || wifiList.length === 0) {
-            // 데이터가 없을 경우 처리
-            const row = document.createElement("tr");
-            row.innerHTML = `<td colspan="17" style="text-align: center;">근처 WiFi 정보를 찾을 수 없습니다.</td>`;
-            tbody.appendChild(row);
+        if (!wifiList || !Array.isArray(wifiList) || wifiList.length === 0) {
+            var emptyRow = document.createElement("tr");
+            emptyRow.innerHTML = '<td colspan="17" style="text-align: center;">근처 WiFi 정보를 찾을 수 없습니다.</td>';
+            tbody.appendChild(emptyRow);
             return;
         }
 
-        // 반환된 WiFi 데이터를 테이블에 추가
-        wifiList.forEach(wifi => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-            <td>${wifi.distance || "정보 없음"}</td>
-            <td>${wifi.mgrNo || "정보 없음"}</td>
-            <td>${wifi.borough || "정보 없음"}</td>
-            <td>${wifi.name || "정보 없음"}</td>
-            <td>${wifi.address1 || "정보 없음"}</td>
-            <td>${wifi.address2 || "정보 없음"}</td>
-            <td>${wifi.installFloor || "정보 없음"}</td>
-            <td>${wifi.installType || "정보 없음"}</td>
-            <td>${wifi.installAgency || "정보 없음"}</td>
-            <td>${wifi.serviceType || "정보 없음"}</td>
-            <td>${wifi.networkType || "정보 없음"}</td>
-            <td>${wifi.installYear || "정보 없음"}</td>
-            <td>${wifi.indoorOutdoor || "정보 없음"}</td>
-            <td>${wifi.remarks || "정보 없음"}</td>
-            <td>${wifi.latitude || "정보 없음"}</td>
-            <td>${wifi.longitude || "정보 없음"}</td>
-            <td>${wifi.workDateTime || "정보 없음"}</td>
-        `;
+        wifiList.forEach(function(item) {
+            var row = document.createElement("tr");
+
+            // 일반 문자열 연결 사용 및 parseFloat 제거
+            var html =
+                '<td>' + (item['mgrNo'] || '') + '</td>' +
+                '<td>' + (item['borough'] || '') + '</td>' +
+                '<td>' + (item['name'] || '') + '</td>' +
+                '<td>' + (item['address1'] || '') + '</td>' +
+                '<td>' + (item['address2'] || '') + '</td>' +
+                '<td>' + (item['installFloor'] || '') + '</td>' +
+                '<td>' + (item['installType'] || '') + '</td>' +
+                '<td>' + (item['installMby'] || '') + '</td>' +
+                '<td>' + (item['serviceSe'] || '') + '</td>' +
+                '<td>' + (item['networkType'] || '') + '</td>' +
+                '<td>' + (item['installYear'] || '') + '</td>' +
+                '<td>' + (item['inoutDoor'] || '') + '</td>' +
+                '<td>' + (item['environment'] || '') + '</td>' +
+                '<td>' + (item['lat'] || '') + '</td>' +
+                '<td>' + (item['lnt'] || '') + '</td>' +
+                '<td>' + (item['workDttm'] || '') + '</td>';
+
+            row.innerHTML = html;
             tbody.appendChild(row);
         });
     }
 
-        function saveLocationHistory(lat, lnt) {
-            fetch("http://192.168.219.100:8080/location/save", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ latitude: lat, longitude: lnt }), // JSON 문자열로 전달
+    function saveLocationHistory(lat, lnt) {
+        fetch("http://192.168.219.100:8080/location/save", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ latitude: lat, longitude: lnt }), // JSON 문자열로 전달
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    // HTTP 응답 상태가 OK가 아닐 경우 처리
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json(); // 응답을 JSON 형식으로 처리
             })
-                .then((response) => {
-                    if (!response.ok) {
-                        // HTTP 응답 상태가 OK가 아닐 경우 처리
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    return response.json(); // 응답을 JSON 형식으로 처리
-                })
-                .then((data) => {
-                    console.log("Location history saved successfully:", data);
-                })
-                .catch((error) => {
-                    console.error("Error saving location history:", error);
-                    alert("Failed to save location history. Please try again later.");
-                });
+            .then((data) => {
+                console.log("Location history saved successfully:", data);
+            })
+            .catch((error) => {
+                console.error("Error saving location history:", error);
+                alert("Failed to save location history. Please try again later.");
+            });
     }
 </script>
 </body>

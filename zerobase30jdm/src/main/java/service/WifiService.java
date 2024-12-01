@@ -330,7 +330,6 @@ public class WifiService {
 
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.err.println("데이터 삭제 중 오류 발생: " + e.getMessage());
