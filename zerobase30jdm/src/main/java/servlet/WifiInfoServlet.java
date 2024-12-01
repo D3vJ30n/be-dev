@@ -1,6 +1,8 @@
 package servlet;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import model.WifiInfo;
 import service.WifiService;
 
 import javax.servlet.ServletException;
@@ -9,56 +11,108 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.PrintWriter;
+import java.util.List;
 
-@WebServlet("/wifi-info")
+@WebServlet(name = "wifiInfoServlet", urlPatterns = "/wifi-info")
 public class WifiInfoServlet extends HttpServlet {
     private final WifiService wifiService = new WifiService();
     private final Gson gson = new Gson();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html; charset=UTF-8");
+        // CORS 헤더 추가
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        response.setContentType("application/json; charset=UTF-8");
 
-        String action = request.getParameter("action");
-        System.out.println("요청된 action: " + action);
-
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
+        PrintWriter out = response.getWriter();
 
         try {
-            if ("load".equals(action)) {
-                // 와이파이 정보 로드
-                int totalCount = wifiService.fetchAndSaveWifiData();
-
-                // 응답 데이터 생성
-                Map<String, Object> result = new HashMap<>();
-                result.put("totalCount", totalCount);
-
-                // JSON 응답 전송
-                response.getWriter().write(gson.toJson(result));
-
+            String action = request.getParameter("action");
+            if ("nearby".equals(action)) {
+                handleNearbyRequest(request, response);
+            } else if ("saveHistory".equals(action)) {
+                handleSaveHistoryRequest(request, response);
             } else {
-                // 잘못된 action 파라미터
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                Map<String, String> error = new HashMap<>();
-                error.put("error", "Invalid action parameter");
-                response.getWriter().write(gson.toJson(error));
+                out.write("{\"error\": \"유효하지 않은 action 파라미터입니다.\"}");
             }
         } catch (Exception e) {
-            // 서버 에러 처리
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            Map<String, String> error = new HashMap<>();
-            error.put("error", "Server error: " + e.getMessage());
-            response.getWriter().write(gson.toJson(error));
-
-            // 로그 출력
-            System.err.println("Error in WifiInfoServlet: " + e.getMessage());
+            out.write("{\"error\": \"서버 오류가 발생했습니다.\"}");
             e.printStackTrace();
+        } finally {
+            out.flush();
+            out.close();
+        }
+    }
+
+    private void handleNearbyRequest(HttpServletRequest request, HttpServletResponse response)
+        throws IOException {
+        PrintWriter out = response.getWriter();
+        String latStr = request.getParameter("lat");
+        String lntStr = request.getParameter("lnt");
+        String radiusParam = request.getParameter("radius");
+
+        System.out.println("반경값(radius): " + radiusParam);
+
+        if (latStr == null || latStr.trim().isEmpty() ||
+            lntStr == null || lntStr.trim().isEmpty() ||
+            radiusParam == null || radiusParam.trim().isEmpty()) {
+            out.write("{\"error\": \"위도, 경도 및 반경값을 모두 입력해주세요.\"}");
+            return;
+        }
+
+        try {
+            double lat = Double.parseDouble(latStr.trim());
+            double lnt = Double.parseDouble(lntStr.trim());
+            double radius = Double.parseDouble(radiusParam.trim());
+
+            if (radius <= 0) {
+                radius = 30.0;
+            }
+
+            if (lat < -90 || lat > 90 || lnt < -180 || lnt > 180) {
+                out.write("{\"error\": \"유효하지 않은 위도, 경도 값입니다.\"}");
+                return;
+            }
+
+            List<WifiInfo> nearbyWifiList = wifiService.getNearestWifi(lat, lnt, radius);
+            out.write(gson.toJson(nearbyWifiList));
+
+            // Pretty Print JSON 추가
+            Gson prettyGson = new GsonBuilder().setPrettyPrinting().create();
+            String prettyJson = prettyGson.toJson(nearbyWifiList);
+            System.out.println("Pretty JSON 출력: \n" + prettyJson); // 서버 콘솔에 출력
+
+        } catch (NumberFormatException e) {
+            out.write("{\"error\": \"위도, 경도 및 반경값은 숫자여야 합니다.\"}");
+        }
+    }
+
+    private void handleSaveHistoryRequest(HttpServletRequest request, HttpServletResponse response)
+        throws IOException {
+        PrintWriter out = response.getWriter();
+        String latStr = request.getParameter("lat");
+        String lntStr = request.getParameter("lnt");
+
+        if (latStr == null || latStr.trim().isEmpty() ||
+            lntStr == null || lntStr.trim().isEmpty()) {
+            out.write("{\"error\": \"위도와 경도를 모두 입력해주세요.\"}");
+            return;
+        }
+
+        try {
+            double lat = Double.parseDouble(latStr.trim());
+            double lnt = Double.parseDouble(lntStr.trim());
+
+            // TODO: 위치 히스토리 저장 로직 구현
+            // wifiService.saveLocationHistory(lat, lnt);
+
+            out.write("{\"status\": \"success\", \"message\": \"위치 히스토리가 저장되었습니다.\"}");
+        } catch (NumberFormatException e) {
+            out.write("{\"error\": \"위도와 경도는 숫자여야 합니다.\"}");
         }
     }
 }

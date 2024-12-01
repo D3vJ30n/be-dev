@@ -2,6 +2,16 @@ package model;
 
 public class WifiInfo {
 
+    private double distance;  // distance 필드 추가
+
+    public double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
+    }
+
     private String mgrNo;         // 와이파이 관리번호
     private String borough;       // 자치구
     private String name;          // 와이파이 이름

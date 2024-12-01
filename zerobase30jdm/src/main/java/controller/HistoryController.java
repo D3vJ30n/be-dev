@@ -2,12 +2,16 @@ package controller;
 
 import model.History;
 import service.HistoryService;
+import util.DBUtil;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
  * HistoryController 클래스
  * 위치 히스토리와 관련된 로직을 처리하고 서비스 레이어와 상호작용하는 컨트롤러
- * 사용자 요청을 처리하고 서비스 메서드를 호출하여 적절한 응답을 반환
  */
 public class HistoryController {
     private final HistoryService historyService;
@@ -99,6 +103,22 @@ public class HistoryController {
         } catch (RuntimeException e) {
             System.err.println("위치 히스토리 개수 조회 중 오류 발생: " + e.getMessage());
             throw e;
+        }
+    }
+
+    /**
+     * 모든 위치 히스토리 삭제
+     */
+    public void deleteAllHistory() {
+        String sql = "DELETE FROM location_history"; // 모든 히스토리 삭제 쿼리
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.executeUpdate(); // 쿼리 실행
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("히스토리 전체 삭제 실패", e); // 예외 처리
         }
     }
 

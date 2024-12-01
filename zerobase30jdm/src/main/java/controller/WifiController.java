@@ -1,21 +1,19 @@
 package controller;
 
+import model.WifiInfo;
 import service.WifiService;
+
+import java.util.List;
 
 /**
  * WifiController 클래스
- * 와이파이 데이터를 처리하는 서비스 계층과 상호작용하는 컨트롤러 클래스
- * API 호출 및 데이터를 데이터베이스에 저장하는 로직을 관리
  */
 public class WifiController {
-    // WifiService 인스턴스를 초기화
     private final WifiService wifiService = new WifiService();
 
-    /**
-     * API 호출을 통해 와이파이 데이터를 가져오고, 데이터베이스에 저장
-     * @return 저장된 와이파이 데이터 개수
-     */
-    public int loadWifiData() {
-        return wifiService.fetchAndSaveWifiData();
+    // 근처 Wi-Fi 검색
+    public List<WifiInfo> getNearbyWifi(double lat, double lnt) {
+        // getNearestWifi 메서드를 사용 (이 메서드는 내부적으로 기본 반경값을 사용)
+        return wifiService.getNearestWifi(lat, lnt);
     }
 }

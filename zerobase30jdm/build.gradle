@@ -23,16 +23,17 @@ dependencies {
     implementation 'ch.qos.logback:logback-classic:1.4.11'
     implementation 'net.java.dev.jna:jna:5.13.0'
     implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'org.apache.tomcat:tomcat-catalina:9.0.97'
 
     // 테스트 의존성 수정 (중복 dependencies 블록 제거)
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.mockito:mockito-core:3.12.4'
+    testImplementation 'org.mockito:mockito-core:4.5.1' // Mockito
 
     // Lombok 설정
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
 
-    providedCompile 'org.apache.tomcat:tomcat-servlet-api:9.0.76'
+    providedCompile 'org.apache.tomcat:tomcat-servlet-api:9.0.97'
 }
 
 // 메인 클래스 설정

@@ -38,14 +38,18 @@
             background-color: #04AA6D;
             color: white;
         }
-        .button {
+        .button-edit, .button-delete {
+            display: inline-block;
             padding: 8px 16px;
+            font-size: 16px; /* 동일한 글씨 크기 */
+            color: white;
+            text-decoration: none; /* 밑줄 제거 */
+            text-align: center;
             border-radius: 4px;
             cursor: pointer;
         }
         .button-edit {
             background-color: #28a745;
-            color: white;
         }
         .button-delete {
             background-color: #dc3545;
@@ -53,6 +57,13 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
+        }
+        .button-edit {
+            background-color: #28a745;
+        }
+
+        .button-edit:hover {
+            background-color: #218838;
         }
         .button-delete:hover {
             background-color: #c82333;

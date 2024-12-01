@@ -105,15 +105,15 @@ public class WifiInfoDao {
     }
 
     /**
-     * 특정 위치(lat, lng) 기준으로 가까운 와이파이를 검색
+     * 특정 위치(lat, lnt) 기준으로 가까운 와이파이를 검색
      */
-    public List<WifiInfo> findNearbyWifi(double lat, double lng) {
+    public List<WifiInfo> findNearbyWifi(double lat, double lnt, double radius) {
         List<WifiInfo> wifiSpots = new ArrayList<>();
         String sql = "SELECT *, " +
             "(6371 * acos(cos(radians(?)) * cos(radians(lat)) * " +
             "cos(radians(lnt) - radians(?)) + sin(radians(?)) * sin(radians(lat)))) AS distance " +
             "FROM wifi_info " +
-            "HAVING distance <= 2 " + // 2km 이내의 와이파이만 검색
+            "HAVING distance <= ? " + // 반경 조건 추가
             "ORDER BY distance " +
             "LIMIT 20";
 
@@ -121,8 +121,11 @@ public class WifiInfoDao {
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setDouble(1, lat);
-            pstmt.setDouble(2, lng);
+            pstmt.setDouble(2, lnt);
             pstmt.setDouble(3, lat);
+            pstmt.setDouble(4, 30); // 반경값 설정
+
+            System.out.println("Executing query with lat=" + lat + ", lnt=" + lnt); // 디버깅용
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
@@ -144,10 +147,16 @@ public class WifiInfoDao {
                         rs.getDouble("lnt"),
                         rs.getString("work_dttm")
                     );
+                    double distance = rs.getDouble("distance");
+                    spot.setDistance(distance); // distance 필드가 있다고 가정
                     wifiSpots.add(spot);
                 }
             }
+
+            System.out.println("Found " + wifiSpots.size() + " nearby WiFi spots"); // 디버깅용
         } catch (SQLException e) {
+            System.err.println("SQL Error: " + e.getMessage()); // 디버깅용
+            e.printStackTrace();
             throw new RuntimeException("근처 와이파이 검색 중 오류 발생", e);
         }
 

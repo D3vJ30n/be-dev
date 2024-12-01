@@ -248,8 +248,8 @@
             <input type="text" id="longitude" class="input-field"
                    placeholder="경도를 입력하세요"
                    aria-label="경도 입력"
-                   aria-describedby="lng-format">
-            <span id="lng-format" class="sr-only">경도는 -180에서 180 사이의 숫자여야 합니다</span>
+                   aria-describedby="lnt-format">
+            <span id="lnt-format" class="sr-only">경도는 -180에서 180 사이의 숫자여야 합니다</span>
 
             <button onclick="addHistory()" class="save-button">저장</button>
         </div>
@@ -326,11 +326,11 @@
     }
 
     // 입력값 유효성 검사
-    function validateCoordinates(lat, lng) {
+    function validateCoordinates(lat, lnt) { // 변경
         const latNum = parseFloat(lat);
-        const lngNum = parseFloat(lng);
+        const lntNum = parseFloat(lnt);
 
-        if (isNaN(latNum) || isNaN(lngNum)) {
+        if (isNaN(latNum) || isNaN(lntNum)) { // 변경
             return { valid: false, message: "위도와 경도는 숫자여야 합니다." };
         }
 
@@ -338,7 +338,7 @@
             return { valid: false, message: "위도는 -90에서 90 사이여야 합니다." };
         }
 
-        if (lngNum < -180 || lngNum > 180) {
+        if (lntNum < -180 || lntNum > 180) { // 변경
             return { valid: false, message: "경도는 -180에서 180 사이여야 합니다." };
         }
 
@@ -408,18 +408,18 @@
     // 키보드 이벤트 처리
     document.addEventListener('DOMContentLoaded', function() {
         const latInput = document.getElementById('latitude');
-        const lngInput = document.getElementById('longitude');
+        const lntInput = document.getElementById('longitude'); // 변경
 
         // Enter 키로 다음 입력 필드로 이동
         latInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
-                lngInput.focus();
+                lntInput.focus(); // 변경
             }
         });
 
         // 경도 입력 필드에서 Enter 키로 저장
-        lngInput.addEventListener('keypress', function(e) {
+        lntInput.addEventListener('keypress', function(e) { // 변경
             if (e.key === 'Enter') {
                 e.preventDefault();
                 addHistory();

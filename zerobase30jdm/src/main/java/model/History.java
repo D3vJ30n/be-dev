@@ -130,6 +130,38 @@ public class History {
     }
 
     /**
+     * Latitude getter
+     * @return 위도
+     */
+    public double getLatitude() {
+        return lat;
+    }
+
+    /**
+     * Longitude getter
+     * @return 경도
+     */
+    public double getLongitude() {
+        return lnt;
+    }
+
+    /**
+     * Latitude setter
+     * @param lat 위도 값
+     */
+    public void setLatitude(double lat) {
+        this.lat = lat;
+    }
+
+    /**
+     * Longitude setter
+     * @param lnt 경도 값
+     */
+    public void setLongitude(double lnt) {
+        this.lnt = lnt;
+    }
+
+    /**
      * 객체 비교를 위한 equals 메서드 오버라이드
      *
      * @param o 비교 대상 객체

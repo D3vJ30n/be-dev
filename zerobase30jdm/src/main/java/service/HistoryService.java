@@ -1,11 +1,15 @@
 package service;
 
+import dao.HistoryDao;
 import model.History;
+import util.DBUtil;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class HistoryService {
+    private final HistoryDao historyDao = new HistoryDao();
     // DB 연결 정보
     private static final String DB_URL = "jdbc:mariadb://192.168.219.101:3306/testdb1?useUnicode=true&characterEncoding=UTF-8";
     private static final String DB_USER = "root";
@@ -50,14 +54,17 @@ public class HistoryService {
         History history = new History();
         history.setLat(latitude);
         history.setLnt(longitude);
-        insertHistory(history); // insertHistory 메서드를 활용
+
+        // 히스토리 저장 (DAO 호출)
+        historyDao.save(history);
+        System.out.println("위치 데이터 저장 완료");
     }
 
     // 위치 히스토리 저장
     public void insertHistory(History history) {
         String sql = "INSERT INTO location_history (lat, lnt, search_dttm) VALUES (?, ?, ?)"; // INSERT 쿼리
 
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+        try (Connection conn = DBUtil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setDouble(1, history.getLat()); // 위도
@@ -134,17 +141,21 @@ public class HistoryService {
         return 0; // 조회된 개수가 없으면 0 반환
     }
 
-    // 히스토리 전체 삭제
-    public void deleteAllHistory() {
-        String sql = "DELETE FROM location_history"; // 모든 히스토리 삭제 쿼리
+    public void deleteAllHistory(boolean confirm) {
+        if (!confirm) {
+            throw new IllegalArgumentException("전체 히스토리 삭제를 수행하려면 'confirm' 값을 true로 설정해야 합니다.");
+        }
 
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+        String sql = "TRUNCATE TABLE location_history";
+
+        try (Connection conn = DBUtil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.executeUpdate(); // 쿼리 실행
+            pstmt.executeUpdate();
+            System.out.println("[완료] 히스토리 테이블이 초기화되었습니다.");
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException("히스토리 전체 삭제 실패", e); // 예외 처리
+            throw new RuntimeException("히스토리 전체 삭제 실패", e);
         }
     }
 }

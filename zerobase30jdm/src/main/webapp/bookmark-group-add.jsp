@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=utf-8" %>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <%
-    request.setCharacterEncoding("UTF-8"); // 가장 첫 부분에 삽입
+    request.setCharacterEncoding("UTF-8");
 %>
 <%@ page import="controller.BookmarkGroupController" %>
 <%
