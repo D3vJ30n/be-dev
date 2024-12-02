@@ -5,7 +5,6 @@
 <%
     request.setCharacterEncoding("UTF-8"); // 가장 첫 부분에 삽입
 %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -190,15 +189,15 @@
     function getLocation() {
         // 서울 주요 지역 좌표 목록 (모두 실제 좌표값입니다)
         const seoulLocations = [
-            { name: '서울금천구', lat: 37.44910833, lnt: 126.9041972},
-            { name: '서울구로구', lat: 37.49265, lnt: 126.8895972},
+            { name: '서울금천구', lat: 37.44910833, lnt: 126.9041972}
         ];
 
-        // 랜덤하게 한 장소 선택
-        const randomLocation = seoulLocations[Math.floor(Math.random() * seoulLocations.length)];
+// 금천구로 고정 설정
+        const randomLocation = seoulLocations[0];
 
         document.getElementById("lat").value = randomLocation.lat;
         document.getElementById("lnt").value = randomLocation.lnt;
+
 
     }
 

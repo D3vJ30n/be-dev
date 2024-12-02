@@ -64,7 +64,6 @@ public class BookmarkController {
         }
     }
 
-
     /**
      * 즐겨찾기 삭제
      * @param id 즐겨찾기 ID

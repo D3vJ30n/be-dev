@@ -31,8 +31,8 @@
 
 - **프로그래밍 언어**: Java 8
 - **빌드 도구**: Gradle
-- **데이터베이스**: MariaDB
-- **웹 서버**: Tomcat 9.0
+- **데이터베이스**: MariaDB 3.0.3
+- **웹 서버**: Tomcat 9.0.97, Postman
 - **프론트엔드**: JSP, HTML5, CSS
 - **사용 라이브러리**
    - OkHttp3: API 호출 및 HTTP 요청 처리

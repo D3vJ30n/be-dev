@@ -37,21 +37,28 @@
             margin-top: 20px;
         }
         .button {
-            display: inline-block;
-            text-decoration: none;
-            padding: 8px 16px;
-            margin: 0 5px;
-            border-radius: 4px;
-            cursor: pointer;
-            border: none;
+            padding: 12px 20px; /* 버튼 내부 여백 조정 */
+            font-size: 16px; /* 글자 크기 조정 */
+            border-radius: 6px; /* 둥근 모서리 */
+            display: inline-block; /* 버튼 크기 일치 */
+            text-align: center; /* 텍스트 가운데 정렬 */
+            text-decoration: none; /* 링크 밑줄 제거 */
+            cursor: pointer; /* 포인터 커서 표시 */
+            border: none; /* 테두리 제거 */
         }
         .button-back {
             background-color: #6c757d;
             color: white;
         }
+        .button-back:hover {
+            background-color: #5a6268;
+        }
         .button-delete {
             background-color: #dc3545;
             color: white;
+        }
+        .button-delete:hover {
+            background-color: #c82333;
         }
     </style>
 </head>
@@ -66,15 +73,15 @@
 
 <table>
     <tr>
-        <th>북마크 이름</th>
+        <th style="text-align: center;">북마크 이름</th>
         <td><%= bookmark.getGroupName() %></td>
     </tr>
     <tr>
-        <th>와이파이명</th>
+        <th style="text-align: center;">와이파이명</th>
         <td><%= bookmark.getWifiName() %></td>
     </tr>
     <tr>
-        <th>등록일자</th>
+        <th style="text-align: center;">등록일자</th>
         <td><%= new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(bookmark.getRegDttm()) %></td>
     </tr>
 </table>

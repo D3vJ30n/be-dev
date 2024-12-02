@@ -1,10 +1,8 @@
 package controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import model.Bookmark;
 import model.BookmarkGroup;
 import service.BookmarkGroupService;
-import service.BookmarkService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
