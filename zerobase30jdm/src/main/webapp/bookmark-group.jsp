@@ -142,14 +142,14 @@
         <!-- 북마크 그룹 추가 -->
         <form id="bookmarkGroupForm" class="bookmark-form" action="bookmark-group-add-submit.jsp" method="POST">
             <div class="form-group">
-                <label for="name">즐겨찾기 그룹 이름</label>
+                <label for="name" style="text-align: center; display: block;">즐겨찾기 그룹 이름</label>
                 <input type="text" id="name" name="name" class="form-control" required aria-required="true">
             </div>
             <div class="form-group">
-                <label for="order">순서</label>
+                <label for="order" style="text-align: center; display: block;">순서</label>
                 <input type="number" id="order" name="order" class="form-control" required aria-required="true" min="1">
             </div>
-            <button type="submit" class="button button-primary">추가</button>
+            <button type="submit" class="button button-primary" style="display: block; margin: 0 auto;">추가</button>
         </form>
 
         <!-- 북마크 그룹 목록 -->

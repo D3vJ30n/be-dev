@@ -105,9 +105,10 @@
             margin: 20px 0;
         }
 
+        /* 테이블 스타일 수정 */
         th, td {
             padding: 12px;
-            text-align: left;
+            text-align: center !important;  /* 모든 셀 가운데 정렬 */
             border: 1px solid #ddd;
         }
 
@@ -148,10 +149,12 @@
             outline-offset: 2px;
         }
 
-        /* 링크 스타일 */
+        /* 링크 가운데 정렬 */
         .detail-link {
             color: #007bff;
             text-decoration: none;
+            display: block;  /* 블록 레벨로 변경 */
+            text-align: center;  /* 링크 텍스트 가운데 정렬 */
         }
 
         .detail-link:hover {
@@ -199,7 +202,7 @@
                 <a href="index.jsp" class="nav-link">홈</a>
                 <a href="history.jsp" class="nav-link">위치 히스토리 목록</a>
                 <a href="load-wifi.jsp" class="nav-link">Open API 와이파이 정보 가져오기</a>
-                <a href="bookmark-list.jsp" class="nav-link" aria-current="page">즐겨찾기 보기</a>
+                <a href="bookmark-list.jsp" class="nav-link" aria-current="page">즐겨찾기 목록</a>
                 <a href="bookmark-group.jsp" class="nav-link">즐겨찾기 그룹 관리</a>
             </div>
         </nav>
@@ -269,36 +272,8 @@
 
 <script>
     function deleteBookmark(id) {
-        if (confirm('이 즐겨찾기를 삭제하시겠습니까?')) {
-            fetch('bookmark-delete.jsp', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json', // JSON 형식으로 전송
-                },
-                body: JSON.stringify({ id }) // JSON 객체로 전송
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to delete bookmark');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        alert('즐겨찾기가 삭제되었습니다.');
-                        location.reload(); // 삭제 후 페이지 새로고침
-                    } else {
-                        alert('삭제 실패: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('삭제 중 오류가 발생했습니다.');
-                });
-        }
+        location.href = 'confirm-delete.jsp?id=' + id;
     }
-
-
 
     // 알림 표시
     function showAlert(message, type) {

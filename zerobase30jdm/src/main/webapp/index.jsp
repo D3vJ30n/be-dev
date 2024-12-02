@@ -1,5 +1,6 @@
 <% response.setHeader("Access-Control-Allow-Origin", "*"); %>
 <%@ page contentType="text/html; charset=utf-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <%
     request.setCharacterEncoding("UTF-8"); // 가장 첫 부분에 삽입
@@ -11,6 +12,10 @@
     <meta charset="UTF-8"> <!-- UTF-8 인코딩 설정 -->
     <title>와이파이 정보 구하기</title>
     <style>
+        /* 클릭된 행 색상 스타일 */
+        .clicked-row {
+            background-color: #d1e7dd !important; /* 연한 녹색 */
+        }
         /* 테이블 스타일 정의 */
         table {
             font-family: Arial, sans-serif;
@@ -164,6 +169,22 @@
     </tr>
     </tbody>
 </table>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const rows = document.querySelectorAll('table tbody tr');
+
+        rows.forEach(row => {
+            row.addEventListener('click', function () {
+                // 모든 행의 클릭 효과 초기화
+                rows.forEach(r => r.classList.remove('clicked-row'));
+
+                // 클릭된 행에 효과 추가
+                this.classList.add('clicked-row');
+            });
+        });
+    });
+</script>
 
 <script>
     function getLocation() {

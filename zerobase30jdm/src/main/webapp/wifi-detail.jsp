@@ -6,6 +6,18 @@
     <meta charset="UTF-8">
     <title>와이파이 상세정보</title>
     <style>
+        /* 상세 정보 페이지를 위한 추가 스타일 수정 */
+        .detail-table th {
+            width: 20%;
+            text-align: center !important;  /* th만 가운데 정렬 */
+            background-color: #04AA6D;
+            color: white;
+        }
+
+        .detail-table td {
+            width: 80%;
+            text-align: left;  /* td는 왼쪽 정렬 유지 */
+        }
         /* 기존 테이블 스타일 재사용 */
         table {
             font-family: Arial, sans-serif;
@@ -54,10 +66,50 @@
         .back-btn:hover {
             background-color: #038857;
         }
+
+        /* 네비게이션 메뉴 링크 스타일 */
+        .nav-link {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #007bff; /* 기본 파란색 */
+        }
+
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+
+        .nav-link:active {
+            color: #0056b3; /* 클릭 시 어두운 파란색 */
+        }
+
+        /* 테이블의 와이파이명 링크 스타일 */
+        .table-link {
+            color: #007bff; /* 기본 파란색 */
+            text-decoration: none;
+        }
+
+        .table-link:hover {
+            text-decoration: underline;
+        }
+
+        .table-link:active {
+            color: #0056b3; /* 클릭 시 어두운 파란색 */
+        }
+
     </style>
 </head>
 <body>
-<h1>와이파이 상세정보</h1>
+<!-- 추가한 네비게이션 메뉴 -->
+<h1 style="text-align: center;">와이파이 상세정보</h1>
+<nav role="navigation" aria-label="메인 메뉴">
+    <div class="nav-menu" style="text-align: center; margin-top: 20px; background-color: #f8f9fa; padding: 10px; border-radius: 4px;">
+        <a href="index.jsp" class="nav-link">홈</a>
+        <a href="history.jsp" class="nav-link">위치 히스토리 목록</a>
+        <a href="load-wifi.jsp" class="nav-link">Open API 와이파이 정보 가져오기</a>
+        <a href="bookmark-list.jsp" class="nav-link">즐겨찾기 보기</a>
+        <a href="bookmark-group.jsp" class="nav-link">즐겨찾기 그룹 관리</a>
+    </div>
+</nav>
 
 <button onclick="history.back()" class="back-btn">뒤로 가기</button>
 
@@ -200,7 +252,13 @@
                 groups.forEach(group => {
                     const option = document.createElement("option");
                     option.value = group.id;
-                    option.textContent = group.name;
+
+                    // selected 상태면 체크 표시 추가
+                    option.textContent = select.value === group.id.toString() ?
+                        "✓ " + group.name : group.name;
+                    if (select.value === group.id.toString()) {
+                        option.selected = true;
+                    }
                     select.appendChild(option);
                 });
             })
@@ -246,6 +304,7 @@
             })
             .then(data => {
                 alert("즐겨찾기가 추가되었습니다.");
+                window.location.href = "bookmark-list.jsp";
             })
             .catch(error => {
                 console.error("Error adding bookmark:", error);
