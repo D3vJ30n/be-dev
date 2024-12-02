@@ -19,11 +19,20 @@
     BookmarkGroupController controller = new BookmarkGroupController();
     try {
         controller.updateBookmarkGroup(id, name, orderNo);
-        out.println("<p>즐겨찾기 그룹이 성공적으로 수정되었습니다.</p>");
-    } catch (Exception e) {
-        out.println("<p>오류 발생: " + e.getMessage() + "</p>");
+%>
+<script>
+    alert("즐겨찾기 그룹이 성공적으로 수정되었습니다.");
+    window.location.href = "bookmark-group.jsp"; // 수정 후 이동할 페이지
+</script>
+<%
+} catch (Exception e) {
+%>
+<script>
+    alert("오류 발생: <%= e.getMessage() %>");
+    window.history.back(); // 오류 발생 시 이전 페이지로 이동
+</script>
+<%
     }
 %>
-<a href="bookmark-group.jsp">돌아가기</a>
 </body>
 </html>

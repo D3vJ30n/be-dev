@@ -61,4 +61,7 @@ public class WifiSpot {
 
     @JsonProperty("WORK_DTTM")  // JSON의 "WORK_DTTM" 속성과 매핑
     private String workDateTime;  // 작업 일시 (마지막 업데이트 시간)
+
+    @JsonProperty("DISTANCE")  // JSON의 "DISTANCE" 속성과 매핑
+    private Double distance;  // 거리 (Km 단위)
 }

@@ -90,15 +90,8 @@ public class BookmarkService {
         }
     }
 
-    // 즐겨찾기 삭제
     public void deleteBookmark(int id) {
-        Bookmark bookmark = getBookmark(id);
-        if (bookmark == null) {
-            throw new IllegalArgumentException("삭제할 즐겨찾기가 존재하지 않습니다. ID: " + id);
-        }
-
         String sql = "DELETE FROM bookmark WHERE id = ?";
-
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -106,13 +99,13 @@ public class BookmarkService {
             int result = pstmt.executeUpdate();
 
             if (result != 1) {
-                throw new SQLException("삭제할 즐겨찾기가 존재하지 않습니다. ID: " + id);
+                throw new SQLException("삭제하려는 북마크가 존재하지 않습니다. ID: " + id);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException("즐겨찾기 삭제 실패", e);
+            throw new RuntimeException("데이터베이스 에러: " + e.getMessage(), e);
         }
     }
+
 
     // 특정 즐겨찾기 조회
     public Bookmark getBookmark(int id) {

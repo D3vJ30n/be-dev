@@ -3,6 +3,7 @@ package servlet;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import model.WifiInfo;
+import model.WifiSpot;
 import service.WifiService;
 
 import javax.servlet.ServletException;
@@ -32,10 +33,13 @@ public class WifiInfoServlet extends HttpServlet {
 
         try {
             String action = request.getParameter("action");
+
             if ("nearby".equals(action)) {
                 handleNearbyRequest(request, response);
             } else if ("saveHistory".equals(action)) {
                 handleSaveHistoryRequest(request, response);
+            } else if ("detail".equals(action)) {    // <- 여기에 새로운 케이스 추가
+                handleDetailRequest(request, response);
             } else {
                 out.write("{\"error\": \"유효하지 않은 action 파라미터입니다.\"}");
             }
@@ -113,6 +117,32 @@ public class WifiInfoServlet extends HttpServlet {
             out.write("{\"status\": \"success\", \"message\": \"위치 히스토리가 저장되었습니다.\"}");
         } catch (NumberFormatException e) {
             out.write("{\"error\": \"위도와 경도는 숫자여야 합니다.\"}");
+        }
+    }
+
+    private void handleDetailRequest(HttpServletRequest request, HttpServletResponse response)
+        throws IOException {
+        PrintWriter out = response.getWriter();
+        String mgrNo = request.getParameter("mgrNo");
+
+        if (mgrNo == null || mgrNo.trim().isEmpty()) {
+            out.write("{\"error\": \"관리번호가 필요합니다.\"}");
+            return;
+        }
+
+        try {
+            WifiSpot wifiSpot = wifiService.getWifiSpot(mgrNo);
+
+            if (wifiSpot == null) {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                out.write("{\"error\": \"해당하는 와이파이 정보를 찾을 수 없습니다.\"}");
+                return;
+            }
+
+            out.write(gson.toJson(wifiSpot));
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            out.write("{\"error\": \"" + e.getMessage() + "\"}");
         }
     }
 }

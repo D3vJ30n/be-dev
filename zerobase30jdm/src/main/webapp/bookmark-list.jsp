@@ -268,29 +268,37 @@
 </div>
 
 <script>
-    // 즐겨찾기 삭제 처리
     function deleteBookmark(id) {
-        if(confirm('이 즐겨찾기를 삭제하시겠습니까?')) {
-            announceToScreenReader('즐겨찾기를 삭제합니다.');
-
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', 'bookmark-group-delete.jsp', true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4) {
-                    if (xhr.status === 200) {
-                        showAlert('즐겨찾기가 삭제되었습니다.', 'success');
-                        location.reload();
-                    } else {
-                        showAlert('삭제 중 오류가 발생했습니다.', 'error');
+        if (confirm('이 즐겨찾기를 삭제하시겠습니까?')) {
+            fetch('bookmark-delete.jsp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', // JSON 형식으로 전송
+                },
+                body: JSON.stringify({ id }) // JSON 객체로 전송
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to delete bookmark');
                     }
-                }
-            };
-
-            xhr.send('id=' + id);
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        alert('즐겨찾기가 삭제되었습니다.');
+                        location.reload(); // 삭제 후 페이지 새로고침
+                    } else {
+                        alert('삭제 실패: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('삭제 중 오류가 발생했습니다.');
+                });
         }
     }
+
+
 
     // 알림 표시
     function showAlert(message, type) {

@@ -136,6 +136,7 @@
     <thead>
     <tr>
         <!-- 테이블 헤더 정의 -->
+        <th scope="col">거리(Km)</th>
         <th scope="col">관리번호</th>
         <th scope="col">자치구</th>
         <th scope="col">와이파이명</th>
@@ -245,28 +246,42 @@
         wifiList.forEach(function(item) {
             var row = document.createElement("tr");
 
-            // 일반 문자열 연결 사용 및 parseFloat 제거
+            var wifiNameCell = `<td>
+            <a href="javascript:void(0)"
+               onclick="showWifiDetail('${item.mgrNo}')"
+               style="color: blue; text-decoration: underline; cursor: pointer;">
+                ${item.name || ''}
+            </a>
+        </td>`;
+
             var html =
-                '<td>' + (item['mgrNo'] || '') + '</td>' +
-                '<td>' + (item['borough'] || '') + '</td>' +
-                '<td>' + (item['name'] || '') + '</td>' +
-                '<td>' + (item['address1'] || '') + '</td>' +
-                '<td>' + (item['address2'] || '') + '</td>' +
-                '<td>' + (item['installFloor'] || '') + '</td>' +
-                '<td>' + (item['installType'] || '') + '</td>' +
-                '<td>' + (item['installMby'] || '') + '</td>' +
-                '<td>' + (item['serviceSe'] || '') + '</td>' +
-                '<td>' + (item['networkType'] || '') + '</td>' +
-                '<td>' + (item['installYear'] || '') + '</td>' +
-                '<td>' + (item['inoutDoor'] || '') + '</td>' +
-                '<td>' + (item['environment'] || '') + '</td>' +
-                '<td>' + (item['lat'] || '') + '</td>' +
-                '<td>' + (item['lnt'] || '') + '</td>' +
-                '<td>' + (item['workDttm'] || '') + '</td>';
+                '<td>' + (Number(item.distance).toFixed(4) || '') + '</td>' +
+                '<td>' + (item.mgrNo || '') + '</td>' +
+                '<td>' + (item.borough || '') + '</td>' +
+                '<td><a href="javascript:void(0)" onclick="showWifiDetail(\'' + item.mgrNo + '\')">' +
+                (item.name || '') + '</a></td>' +
+                '<td>' + (item.address1 || '') + '</td>' +
+                '<td>' + (item.address2 || '') + '</td>' +
+                '<td>' + (item.installFloor || '') + '</td>' +
+                '<td>' + (item.installType || '') + '</td>' +
+                '<td>' + (item.installAgency || '') + '</td>' +        // 설치기관
+                '<td>' + (item.serviceType || '') + '</td>' +          // 서비스 구분
+                '<td>' + (item.networkType || '') + '</td>' +          // 망종류
+                '<td>' + (item.installYear || '') + '</td>' +          // 설치년도
+                '<td>' + (item.indoorOutdoor || '') + '</td>' +        // 실내외구분
+                '<td>' + (item.remarks || '') + '</td>' +              // WIFI접속환경
+                '<td>' + (item.latitude || '') + '</td>' +             // X좌표
+                '<td>' + (item.longitude || '') + '</td>' +            // Y좌표
+                '<td>' + (item.workDateTime || '') + '</td>';          // 작업일자
 
             row.innerHTML = html;
             tbody.appendChild(row);
         });
+    }
+
+    // 새로 추가된 함수 - 와이파이 상세 정보 페이지로 이동
+    function showWifiDetail(mgrNo) {
+        window.location.href = 'wifi-detail.jsp?mgrNo=' + encodeURIComponent(mgrNo);
     }
 
     function saveLocationHistory(lat, lnt) {
@@ -290,6 +305,30 @@
             .catch((error) => {
                 console.error("Error saving location history:", error);
                 alert("Failed to save location history. Please try again later.");
+            });
+    }
+
+    // 북마크 그룹 목록 불러오기
+    function loadBookmarkGroups() {
+        fetch("http://192.168.219.100:8080/bookmark-group/list")
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch bookmark groups");
+                }
+                return response.json();
+            })
+            .then(groups => {
+                const select = document.getElementById("bookmark-group-select");
+                select.innerHTML = '<option value="">즐겨찾기 그룹 이름 선택</option>';
+                groups.forEach(group => {
+                    const option = document.createElement("option");
+                    option.value = group.id;
+                    option.textContent = group.name;
+                    select.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error("Error loading bookmark groups:", error);
             });
     }
 </script>
