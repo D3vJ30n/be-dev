@@ -53,7 +53,7 @@
 
 다음은 프로젝트의 전체 디렉토리 구조를 나타냅니다.
 
-![img.png](img.png)![디렉토리 구조](directory_structure.png)
+![Public WiFi Service](images/Directory_Structure.png)
 
 ---
 
@@ -96,8 +96,3 @@
 - 데이터베이스 연결 정보는 필요시 수정 가능합니다.
 - API 키는 `WifiService.java` 파일에서 수정할 수 있습니다.
 - Gradle 기반의 프로젝트로 `build.gradle`을 통해 빌드 및 의존성 관리가 가능합니다.
-
----
-
-## 작성자
-- 전도명
