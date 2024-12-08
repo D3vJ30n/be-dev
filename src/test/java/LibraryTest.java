@@ -31,18 +31,18 @@ public class LibraryTest {
     }
 
     @Test
-    void mysqlTest() {
+    void mariadbTest() {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
+            Class.forName("org.mariadb.jdbc.Driver");
             Connection conn = DriverManager.getConnection(
-                "jdbc:mysql://192.168.219.101:3306/kobis_db",
-                "kobis_user",
-                "kobis1234"
+                "jdbc:mariadb://192.168.219.101:3306/testdb1",
+                "root",
+                "Jdm4568396*"
             );
             assertNotNull(conn);
             conn.close();
         } catch (Exception e) {
-            fail("MySQL Fail: " + e.getMessage());
+            fail("MariaDB Fail: " + e.getMessage());
         }
     }
 

@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WifiInfoDao {
-
     private static final String DB_URL = "jdbc:mariadb://192.168.219.101:3306/testdb1";
     private static final String DB_USER = "root";
     private static final String DB_PASSWORD = "Jdm4568396*";

@@ -1,13 +1,16 @@
 plugins {
     id 'java'
     id 'war'
+    id 'org.springframework.boot' version '3.4.0'
+    id 'io.spring.dependency-management' version '1.1.4'
 }
 
 group = 'org.example'
 version = '1.0-SNAPSHOT'
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 repositories {
@@ -15,24 +18,27 @@ repositories {
 }
 
 dependencies {
-    // Servlet & JSP
-    implementation 'javax.servlet:javax.servlet-api:4.0.1'
-    implementation 'javax.servlet.jsp:javax.servlet.jsp-api:2.3.3'
-    implementation 'javax.servlet:jstl:1.2'
+    // 스프링 부트 기본 의존성
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
-    // MySQL
-    implementation 'mysql:mysql-connector-java:8.0.28'
+    // MariaDB
+    implementation 'org.mariadb.jdbc:mariadb-java-client:3.5.1'
 
-    // Jackson
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
+    // Jackson (Spring Boot 관리 버전 사용)
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
 
     // Lombok
-    compileOnly 'org.projectlombok:lombok:1.18.22'
-    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
 
     // 테스트
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+wrapper {
+    gradleVersion = '8.11.1'
+    distributionType = Wrapper.DistributionType.BIN
 }
 
 test {
