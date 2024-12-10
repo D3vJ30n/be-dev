@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'war'
+    id 'application'
     id 'org.springframework.boot' version '3.4.0'
     id 'io.spring.dependency-management' version '1.1.4'
 }
@@ -21,6 +22,16 @@ dependencies {
     // 스프링 부트 기본 의존성
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    implementation 'org.redisson:redisson:3.40.1'
+    implementation('it.ozimov:embedded-redis:0.7.3') {
+        exclude group: "org.slf4j", module: "slf4j-simple"
+    }
+
+    implementation 'javax.servlet:javax.servlet-api:4.0.1'
+
+    runtimeOnly 'com.h2database:h2'
 
     // MariaDB
     implementation 'org.mariadb.jdbc:mariadb-java-client:3.5.1'
@@ -34,6 +45,8 @@ dependencies {
 
     // 테스트
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+    testImplementation 'org.mockito:mockito-core:5.5.0'
 }
 
 wrapper {
@@ -43,4 +56,9 @@ wrapper {
 
 test {
     useJUnitPlatform()
+}
+
+// 메인 클래스 설정
+springBoot {
+    mainClassName = 'com.example.demo.DemoApplication'
 }
