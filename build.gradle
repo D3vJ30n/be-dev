@@ -29,7 +29,8 @@ dependencies {
         exclude group: "org.slf4j", module: "slf4j-simple"
     }
 
-    implementation 'javax.servlet:javax.servlet-api:4.0.1'
+//    implementation 'javax.servlet:javax.servlet-api:4.0.1'
+    implementation 'jakarta.annotation:jakarta.annotation-api:2.1.1'
 
     runtimeOnly 'com.h2database:h2'
 
@@ -60,5 +61,5 @@ test {
 
 // 메인 클래스 설정
 springBoot {
-    mainClassName = 'com.example.demo.DemoApplication'
+    mainClassName = 'com.example.demo.AccountApplication'
 }
