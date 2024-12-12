@@ -10,9 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RestController
-public class AccountController {
+public class AccountController { // 계좌 컨트롤러 클래스
 
-    private static final Logger logger = LoggerFactory.getLogger(AccountController.class);
+    private static final Logger logger = LoggerFactory.getLogger(AccountController.class); // 로거 초기화
 
     private final AccountService accountService;
     private final RedisTestService redisTestService;
@@ -23,7 +23,7 @@ public class AccountController {
         this.redisTestService = redisTestService;
     }
 
-    @GetMapping("/get-lock")
+    @GetMapping("/get-lock") // Redis 락 획득을 위한 엔드포인트
     public String getLock() {
         logger.info("Attempting to acquire Redis lock");
         try {
@@ -36,7 +36,7 @@ public class AccountController {
         }
     }
 
-    @GetMapping("/create-account")
+    @GetMapping("/create-account") // 계좌 생성을 위한 엔드포인트
     public String createAccount() {
         logger.info("Creating a new account");
         try {
@@ -49,7 +49,7 @@ public class AccountController {
         }
     }
 
-    @GetMapping("/account/{id}")
+    @GetMapping("/account/{id}") // 계좌 조회를 위한 엔드포인트
     public Account getAccount(@PathVariable Long id) {
         logger.info("Fetching account with id: {}", id);
         try {
